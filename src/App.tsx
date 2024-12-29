@@ -1,35 +1,46 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from "react";
+import * as Tone from "tone";
 
-function App() {
-  const [count, setCount] = useState(0)
+const AudioPlayer = () => {
+  // Define the state with the proper type
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [synth, setSynth] = useState<Tone.Synth | null>(null);
+
+  useEffect(() => {
+    // Initialize Tone.js components
+    const newSynth = new Tone.Synth().toDestination();
+    setSynth(newSynth);
+
+    return () => {
+      // Clean up Tone.js components
+      newSynth.dispose();
+    };
+  }, []);
+
+  const handlePlay = () => {
+    if (synth) {
+      synth.triggerAttackRelease("C4", "8n");
+      setIsPlaying(true);
+    }
+  };
+
+  const handleStop = () => {
+    if (synth) {
+      synth.triggerRelease();
+      setIsPlaying(false);
+    }
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div>
+      <button onClick={handlePlay} disabled={isPlaying}>
+        Play
+      </button>
+      <button onClick={handleStop} disabled={!isPlaying}>
+        Stop
+      </button>
+    </div>
+  );
+};
 
-export default App
+export default AudioPlayer;
