@@ -1,18 +1,19 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "./store/store";
+import { play, stop } from "./store/isPlayingSlice";
 import * as Tone from "tone";
 
 const AudioPlayer = () => {
-  // Define the state with the proper type
-  const [isPlaying, setIsPlaying] = useState(false);
+  const isPlaying = useSelector((state: RootState) => state.isPlaying.value);
+  const dispatch = useDispatch();
   const [synth, setSynth] = useState<Tone.Synth | null>(null);
 
   useEffect(() => {
-    // Initialize Tone.js components
     const newSynth = new Tone.Synth().toDestination();
     setSynth(newSynth);
 
     return () => {
-      // Clean up Tone.js components
       newSynth.dispose();
     };
   }, []);
@@ -20,14 +21,13 @@ const AudioPlayer = () => {
   const handlePlay = () => {
     if (synth) {
       synth.triggerAttackRelease("C4", "8n");
-      setIsPlaying(true);
+      dispatch(play());
     }
   };
 
   const handleStop = () => {
     if (synth) {
-      synth.triggerRelease();
-      setIsPlaying(false);
+      dispatch(stop());
     }
   };
 
