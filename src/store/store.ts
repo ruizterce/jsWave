@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import isPlayingReducer from "./isPlayingSlice";
+import stepCounterReducer from "./stepCounterSlice";
 
 const store = configureStore({
   reducer: {
     isPlaying: isPlayingReducer,
+    stepCounter: stepCounterReducer,
   },
 });
 
