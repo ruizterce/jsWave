@@ -3,11 +3,12 @@ import Synth from "./Synth";
 import * as Tone from "tone";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "./store/store";
-import { increment, setValue } from "./store/stepCounterSlice";
+import { increment, setValue, setLength } from "./store/stepCounterSlice";
 
 const Sequencer = () => {
   const isPlaying = useSelector((state: RootState) => state.isPlaying.value);
   const stepCounter = useSelector((state: RootState) => state.stepCounter);
+  const [stepLength, setStepLength] = useState<number>(8);
   const [stepArray, setStepArray] = useState<boolean[]>([]);
   const dispatch = useDispatch();
 
@@ -26,10 +27,16 @@ const Sequencer = () => {
     loop.start(0);
   }, [loop]);
 
-  // Initialize stepArray
+  // Initialize stepLength
   useEffect(() => {
-    setStepArray(Array(stepCounter.length).fill(false));
+    setStepLength(stepCounter.length);
   }, [stepCounter.length]);
+
+  // Handle changes on stepLength
+  useEffect(() => {
+    dispatch(setLength(stepLength));
+    setStepArray(Array(stepLength).fill(false));
+  }, [dispatch, stepLength]);
 
   // Set stepArray active step
   useEffect(() => {
@@ -50,6 +57,18 @@ const Sequencer = () => {
 
   return (
     <div className="flex flex-col gap-2">
+      <div className="flex gap-2">
+        <label htmlFor="steps">Steps: </label>
+        <input
+          id="steps"
+          name="steps"
+          type="number"
+          value={stepLength}
+          onChange={(e) => {
+            setStepLength(parseInt(e.target.value));
+          }}
+        />
+      </div>
       <div className="flex gap-2">
         {stepArray.map((_step, index) => (
           <div

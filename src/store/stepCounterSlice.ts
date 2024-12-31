@@ -36,9 +36,13 @@ const stepCounterSlice = createSlice({
     setValue: (state, action: PayloadAction<number>) => {
       state.value = action.payload;
     },
+    setLength: (state, action: PayloadAction<number>) => {
+      state.length = action.payload;
+      console.log("state.length = " + state.length);
+    },
   },
 });
 
-export const { increment, decrement, reset, setValue } =
+export const { increment, decrement, reset, setValue, setLength } =
   stepCounterSlice.actions;
 export default stepCounterSlice.reducer;

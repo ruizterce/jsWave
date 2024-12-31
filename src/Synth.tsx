@@ -7,16 +7,7 @@ const Synth = () => {
   const isPlaying = useSelector((state: RootState) => state.isPlaying.value);
   const stepCounter = useSelector((state: RootState) => state.stepCounter);
   const [synth, setSynth] = useState<Tone.Synth | null>(null);
-  const [noteArray, setNoteArray] = useState([
-    true,
-    false,
-    true,
-    false,
-    true,
-    false,
-    true,
-    false,
-  ]);
+  const [noteArray, setNoteArray] = useState<boolean[]>([]);
 
   useEffect(() => {
     // Initialize the synth
@@ -28,6 +19,11 @@ const Synth = () => {
       newSynth.dispose();
     };
   }, []);
+
+  // Handle changes on stepLength
+  useEffect(() => {
+    setNoteArray(Array(stepCounter.length).fill(false));
+  }, [stepCounter.length]);
 
   useEffect(() => {
     // Play or stop the synth based on isPlaying
