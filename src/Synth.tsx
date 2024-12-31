@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "./store/store";
 import * as Tone from "tone";
+import { Track } from "./types";
 
-const Synth = () => {
+const Synth: React.FC<{ options?: Track["options"] }> = ({ options }) => {
   const isPlaying = useSelector((state: RootState) => state.isPlaying.value);
   const stepCounter = useSelector((state: RootState) => state.stepCounter);
   const [synth, setSynth] = useState<Tone.Synth | null>(null);
@@ -30,13 +31,14 @@ const Synth = () => {
     if (synth) {
       if (isPlaying) {
         if (noteArray[stepCounter.value - 1] === true) {
-          synth.triggerAttackRelease("C4", "8n");
+          const note = options?.note || "C4";
+          synth.triggerAttackRelease(note, "8n");
         }
       } else {
         synth.triggerRelease();
       }
     }
-  }, [isPlaying, noteArray, stepCounter, synth]);
+  }, [isPlaying, noteArray, options, stepCounter, synth]);
 
   return (
     <div className="flex gap-2">

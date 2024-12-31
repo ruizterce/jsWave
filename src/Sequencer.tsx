@@ -4,6 +4,7 @@ import * as Tone from "tone";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "./store/store";
 import { increment, setValue, setLength } from "./store/stepCounterSlice";
+import { Track } from "./types";
 
 const Sequencer = () => {
   const isPlaying = useSelector((state: RootState) => state.isPlaying.value);
@@ -11,9 +12,20 @@ const Sequencer = () => {
   const [stepLength, setStepLength] = useState<number>(8);
   const [stepArray, setStepArray] = useState<boolean[]>([]);
   const [tempo, setTempo] = useState<number>(90);
+  const [trackArray, setTrackArray] = useState<Track[]>([
+    { type: "synth", options: { note: "C4" } },
+    { type: "synth", options: { note: "D4" } },
+    { type: "synth", options: { note: "F4" } },
+  ]);
   const dispatch = useDispatch();
-
   const Transport = Tone.getTransport();
+
+  const mountTrack = (track: Track) => {
+    switch (track.type) {
+      case "synth":
+        return <Synth options={track.options} />;
+    }
+  };
 
   // Handle tempo changes
   useEffect(() => {
@@ -50,6 +62,11 @@ const Sequencer = () => {
     );
   }, [stepCounter.value]);
 
+  // Handle trackArray
+  useEffect(() => {
+    // TODO
+  }, []);
+
   // Listen to isPlaying
   useEffect(() => {
     if (isPlaying) {
@@ -62,6 +79,7 @@ const Sequencer = () => {
 
   return (
     <div className="flex flex-col gap-2 ">
+      {/* Controllers */}
       <div className="p-2 flex gap-2 rounded bg-light">
         <label htmlFor="tempo">Tempo: </label>
         <input
@@ -98,7 +116,10 @@ const Sequencer = () => {
           ></div>
         ))}
       </div>
-      <Synth />
+      {/* Tracks */}
+      {trackArray.map((track: Track) => {
+        return mountTrack(track);
+      })}
     </div>
   );
 };
