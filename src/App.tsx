@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import PlayMenu from "./PlayMenu";
 import Synth from "./Synth";
 import * as Tone from "tone";
@@ -13,20 +13,25 @@ import {
 
 const App = () => {
   const isPlaying = useSelector((state: RootState) => state.isPlaying.value);
+  const stepCounter = useSelector(
+    (state: RootState) => state.stepCounter.value
+  );
 
   const dispatch = useDispatch();
 
   const Transport = Tone.getTransport();
   Transport.bpm.value = 80;
 
-  const loop = new Tone.Loop((time) => {
-    console.log(time);
-    dispatch(increment());
-  }, "8n");
+  const loop = useMemo(() => {
+    return new Tone.Loop((time) => {
+      console.log(time);
+      dispatch(increment());
+    }, "8n");
+  }, [dispatch]);
 
   useEffect(() => {
     loop.start(0);
-  }, []);
+  }, [loop]);
 
   useEffect(() => {
     console.log(isPlaying);
@@ -36,7 +41,7 @@ const App = () => {
       Transport.stop();
       dispatch(setValue(0));
     }
-  }, [isPlaying, loop]);
+  }, [Transport, dispatch, isPlaying, loop]);
 
   return (
     <>

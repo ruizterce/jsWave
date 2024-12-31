@@ -2,10 +2,12 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface StepCounterState {
   value: number;
+  length: number;
 }
 
 const initialState: StepCounterState = {
   value: 0,
+  length: 8,
 };
 
 const stepCounterSlice = createSlice({
@@ -13,11 +15,20 @@ const stepCounterSlice = createSlice({
   initialState,
   reducers: {
     increment: (state) => {
-      state.value += 1;
+      if (state.value === state.length) {
+        state.value = 1;
+      } else {
+        state.value += 1;
+      }
       console.log("stepCounter: " + state.value);
     },
     decrement: (state) => {
-      state.value -= 1;
+      if (state.value === 1) {
+        state.value = state.length;
+      } else {
+        state.value -= 1;
+      }
+      console.log("stepCounter: " + state.value);
     },
     reset: (state) => {
       state.value = 0;
