@@ -10,10 +10,15 @@ const Sequencer = () => {
   const stepCounter = useSelector((state: RootState) => state.stepCounter);
   const [stepLength, setStepLength] = useState<number>(8);
   const [stepArray, setStepArray] = useState<boolean[]>([]);
+  const [tempo, setTempo] = useState<number>(90);
   const dispatch = useDispatch();
 
   const Transport = Tone.getTransport();
-  Transport.bpm.value = 80;
+
+  // Handle tempo changes
+  useEffect(() => {
+    Transport.bpm.value = tempo;
+  }, [Transport.bpm, tempo]);
 
   // Initialize Loop
   const loop = useMemo(() => {
@@ -56,8 +61,19 @@ const Sequencer = () => {
   }, [Transport, dispatch, isPlaying, loop]);
 
   return (
-    <div className="flex flex-col gap-2">
-      <div className="flex gap-2">
+    <div className="flex flex-col gap-2 ">
+      <div className="p-2 flex gap-2 rounded bg-light">
+        <label htmlFor="tempo">Tempo: </label>
+        <input
+          id="tempo"
+          name="tempo"
+          type="number"
+          value={tempo}
+          onChange={(e) => {
+            setTempo(parseInt(e.target.value));
+          }}
+          className="w-10"
+        />
         <label htmlFor="steps">Steps: </label>
         <input
           id="steps"
@@ -67,6 +83,7 @@ const Sequencer = () => {
           onChange={(e) => {
             setStepLength(parseInt(e.target.value));
           }}
+          className="w-10"
         />
       </div>
       <div className="flex gap-2">
