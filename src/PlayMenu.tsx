@@ -15,11 +15,27 @@ const PlayMenu = () => {
   };
 
   return (
-    <div>
-      <button onClick={handlePlay} disabled={isPlaying}>
+    <div className="flex gap-2">
+      <button
+        onClick={handlePlay}
+        disabled={isPlaying}
+        className={`p-2 rounded ${
+          isPlaying
+            ? "bg-primary text-primaryContrast"
+            : "bg-primaryContrast text-primary shadow-xl"
+        }`}
+      >
         Play
       </button>
-      <button onClick={handleStop} disabled={!isPlaying}>
+      <button
+        onClick={handleStop}
+        disabled={!isPlaying}
+        className={`p-2 rounded ${
+          isPlaying
+            ? "bg-primaryContrast text-primary "
+            : "bg-primary text-primaryContrast"
+        }`}
+      >
         Stop
       </button>
     </div>
