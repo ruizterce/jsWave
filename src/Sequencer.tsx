@@ -5,17 +5,32 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "./store/store";
 import { increment, setValue, setLength } from "./store/stepCounterSlice";
 import { Track } from "./types";
+import Sampler from "./Sampler";
 
 const Sequencer = () => {
   const isPlaying = useSelector((state: RootState) => state.isPlaying.value);
   const stepCounter = useSelector((state: RootState) => state.stepCounter);
-  const [stepLength, setStepLength] = useState<number>(8);
+  const [stepLength, setStepLength] = useState<number>(16);
   const [stepArray, setStepArray] = useState<boolean[]>([]);
-  const [tempo, setTempo] = useState<number>(90);
+  const [tempo, setTempo] = useState<number>(120);
   const [trackArray, setTrackArray] = useState<Track[]>([
     { type: "synth", options: { note: "C4" } },
-    { type: "synth", options: { note: "D4" } },
-    { type: "synth", options: { note: "F4" } },
+    {
+      type: "sampler",
+      options: { sample: "src/assets/samples/TR-808/Kick-Mid.mp3" },
+    },
+    {
+      type: "sampler",
+      options: { sample: "src/assets/samples/TR-808/Snare-Mid.mp3" },
+    },
+    {
+      type: "sampler",
+      options: { sample: "src/assets/samples/TR-808/Clap.mp3" },
+    },
+    {
+      type: "sampler",
+      options: { sample: "src/assets/samples/TR-808/Hihat.mp3" },
+    },
   ]);
   const dispatch = useDispatch();
   const Transport = Tone.getTransport();
@@ -24,6 +39,8 @@ const Sequencer = () => {
     switch (track.type) {
       case "synth":
         return <Synth options={track.options} />;
+      case "sampler":
+        return <Sampler options={track.options} />;
     }
   };
 
