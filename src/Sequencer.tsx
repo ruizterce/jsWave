@@ -14,33 +14,74 @@ const Sequencer = () => {
   // Initialize Instruments
   const [trackArray, setTrackArray] = useState<Track[]>([
     {
+      name: "Synth",
       type: "synth",
       options: { note: "C4" },
       synth: new Tone.Synth().toDestination(),
       noteArray: Array(16).fill(false),
     },
     {
+      name: "Kick-Mid",
       type: "sampler",
-      options: { sample: "src/assets/samples/TR-808/Kick-Mid.mp3" },
-      sampler: new Tone.Sampler({
-        urls: { C5: "Kick-Mid.mp3" },
-        baseUrl: "src/assets/samples/TR-808/",
-      }).toDestination(),
+      sampler: undefined,
+      noteArray: Array(16).fill(false),
+    },
+    {
+      name: "Snare-Mid",
+      type: "sampler",
+      sampler: undefined,
+      noteArray: Array(16).fill(false),
+    },
+    {
+      name: "Clap",
+      type: "sampler",
+      sampler: undefined,
+      noteArray: Array(16).fill(false),
+    },
+    {
+      name: "Hihat",
+      type: "sampler",
+      sampler: undefined,
       noteArray: Array(16).fill(false),
     },
   ]);
 
-  // Load Samples
+  // Load Samples only once when the component mounts
   useEffect(() => {
     const loadSamples = async () => {
-      await Tone.loaded(); // Wait for all Tone.js samples to load
-      console.log("Samples loaded and ready.");
+      try {
+        const samplerTracks = trackArray.map((track) => {
+          if (track.type === "sampler" && track.sampler === undefined) {
+            console.log("creating sampler");
+            const sampler = new Tone.Sampler(
+              {
+                C5: `${track.name}.mp3`,
+              },
+              {
+                baseUrl: `src/assets/samples/TR-808/`,
+              }
+            ).toDestination();
+
+            return {
+              ...track,
+              sampler,
+            };
+          }
+          return track;
+        });
+
+        setTrackArray(samplerTracks); // Update trackArray with initialized samplers
+        await Tone.loaded(); // Wait for all samples to load
+        console.log("Samples loaded and ready.");
+      } catch (error) {
+        console.error("Error loading samples:", error);
+      }
     };
 
-    loadSamples().catch((error) => {
-      console.error("Error loading samples:", error);
+    loadSamples().catch((err) => {
+      console.log("Error loading samples: " + err);
     });
-  }, []);
+  }, []); // Empty dependency array ensures this runs only once
 
   // Handle tempo changes
   useEffect(() => {
@@ -53,27 +94,20 @@ const Sequencer = () => {
   useEffect(() => {
     trackArrayRef.current = trackArray;
   }, [trackArray]);
-
   // main scheduleRepeat Loop
   useEffect(() => {
     const stepLength = trackArrayRef.current[0]?.noteArray?.length || 16;
     let currentStep = 0;
 
     const loop = Tone.Transport.scheduleRepeat((time) => {
-      console.log("Current Step:", currentStep); // Debugging step index
-
-      // Update stepArray for visual feedback
-      const newStepArray = Array(16).fill(false);
-      newStepArray[currentStep] = true;
-      setStepArray(newStepArray);
+      // Update stepArray for visual feedback - TODO refactor to avoid performance issues
+      //const newStepArray = Array(16).fill(false);
+      //newStepArray[currentStep] = true;
+      //setStepArray(newStepArray);
 
       // Trigger track notes
-      trackArrayRef.current.forEach((track, trackIndex) => {
-        console.log(`Track ${trackIndex}:`, track); // Debugging track
+      trackArrayRef.current.forEach((track) => {
         if (track.noteArray && track.noteArray[currentStep]) {
-          console.log(
-            `Triggering ${track.type} at step ${currentStep}, track ${trackIndex}`
-          );
           switch (track.type) {
             case "synth":
               track.synth?.triggerAttackRelease(

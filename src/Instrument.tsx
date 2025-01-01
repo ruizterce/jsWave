@@ -17,20 +17,23 @@ const Instrument: React.FC<{
   };
 
   return (
-    <div className="flex gap-2">
-      {noteArray.map((note, index) => (
-        <div
-          key={index}
-          className={`h-6 w-6 rounded text-center cursor-pointer ${
-            note
-              ? "bg-primary text-primaryContrast"
-              : "bg-primaryContrast text-primary"
-          }`}
-          onClick={() => toggleNote(index)}
-        >
-          {index + 1}
-        </div>
-      ))}
+    <div>
+      <div className="absolute w-20 -translate-x-20 ">{track.name}</div>
+      <div className="flex gap-2">
+        {noteArray.map((note, index) => (
+          <div
+            key={index}
+            className={`h-6 w-6 rounded text-center cursor-pointer ${
+              note
+                ? "bg-primary text-primaryContrast"
+                : "bg-primaryContrast text-primary"
+            }`}
+            onClick={() => toggleNote(index)}
+          >
+            {index + 1}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

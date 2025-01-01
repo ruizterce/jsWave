@@ -1,6 +1,7 @@
 import * as Tone from "tone";
 
 export interface Track {
+  name: string;
   type: "synth" | "sampler";
   options?: {
     note?: string;
