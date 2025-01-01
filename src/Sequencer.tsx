@@ -1,98 +1,122 @@
-import { useEffect, useState, useMemo } from "react";
-import Synth from "./Synth";
+import { useEffect, useState, useRef } from "react";
+import Instrument from "./Instrument";
 import * as Tone from "tone";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "./store/store";
-import { increment, setValue, setLength } from "./store/stepCounterSlice";
 import { Track } from "./types";
-import Sampler from "./Sampler";
 
 const Sequencer = () => {
   const isPlaying = useSelector((state: RootState) => state.isPlaying.value);
-  const stepCounter = useSelector((state: RootState) => state.stepCounter);
   const [stepLength, setStepLength] = useState<number>(16);
-  const [stepArray, setStepArray] = useState<boolean[]>([]);
+  const [stepArray, setStepArray] = useState<boolean[]>(Array(16).fill(false));
   const [tempo, setTempo] = useState<number>(120);
+
+  // Initialize Instruments
   const [trackArray, setTrackArray] = useState<Track[]>([
-    { type: "synth", options: { note: "C4" } },
+    {
+      type: "synth",
+      options: { note: "C4" },
+      synth: new Tone.Synth().toDestination(),
+      noteArray: Array(16).fill(false),
+    },
     {
       type: "sampler",
       options: { sample: "src/assets/samples/TR-808/Kick-Mid.mp3" },
-    },
-    {
-      type: "sampler",
-      options: { sample: "src/assets/samples/TR-808/Snare-Mid.mp3" },
-    },
-    {
-      type: "sampler",
-      options: { sample: "src/assets/samples/TR-808/Clap.mp3" },
-    },
-    {
-      type: "sampler",
-      options: { sample: "src/assets/samples/TR-808/Hihat.mp3" },
+      sampler: new Tone.Sampler({
+        urls: { C5: "Kick-Mid.mp3" },
+        baseUrl: "src/assets/samples/TR-808/",
+      }).toDestination(),
+      noteArray: Array(16).fill(false),
     },
   ]);
-  const dispatch = useDispatch();
-  const Transport = Tone.getTransport();
 
-  const mountTrack = (track: Track) => {
-    switch (track.type) {
-      case "synth":
-        return <Synth options={track.options} />;
-      case "sampler":
-        return <Sampler options={track.options} />;
-    }
-  };
+  // Load Samples
+  useEffect(() => {
+    const loadSamples = async () => {
+      await Tone.loaded(); // Wait for all Tone.js samples to load
+      console.log("Samples loaded and ready.");
+    };
+
+    loadSamples().catch((error) => {
+      console.error("Error loading samples:", error);
+    });
+  }, []);
 
   // Handle tempo changes
   useEffect(() => {
-    Transport.bpm.value = tempo;
-  }, [Transport.bpm, tempo]);
+    Tone.Transport.bpm.value = tempo;
+  }, [tempo]);
 
-  // Initialize Loop
-  const loop = useMemo(() => {
-    return new Tone.Loop((time) => {
-      console.log(time);
-      dispatch(increment());
-    }, "8n");
-  }, [dispatch]);
+  // Store and update trackArray
+  const trackArrayRef = useRef(trackArray);
 
   useEffect(() => {
-    loop.start(0);
-  }, [loop]);
+    trackArrayRef.current = trackArray;
+  }, [trackArray]);
 
-  // Initialize stepLength
+  // main scheduleRepeat Loop
   useEffect(() => {
-    setStepLength(stepCounter.length);
-  }, [stepCounter.length]);
+    const stepLength = trackArrayRef.current[0]?.noteArray?.length || 16;
+    let currentStep = 0;
 
-  // Handle changes on stepLength
-  useEffect(() => {
-    dispatch(setLength(stepLength));
-    setStepArray(Array(stepLength).fill(false));
-  }, [dispatch, stepLength]);
+    const loop = Tone.Transport.scheduleRepeat((time) => {
+      console.log("Current Step:", currentStep); // Debugging step index
 
-  // Set stepArray active step
-  useEffect(() => {
-    setStepArray((prevArray) =>
-      prevArray.map((_step, i) => (i === stepCounter.value - 1 ? true : false))
-    );
-  }, [stepCounter.value]);
+      // Update stepArray for visual feedback
+      const newStepArray = Array(16).fill(false);
+      newStepArray[currentStep] = true;
+      setStepArray(newStepArray);
 
-  // Handle trackArray
-  useEffect(() => {
-    // TODO
+      // Trigger track notes
+      trackArrayRef.current.forEach((track, trackIndex) => {
+        console.log(`Track ${trackIndex}:`, track); // Debugging track
+        if (track.noteArray && track.noteArray[currentStep]) {
+          console.log(
+            `Triggering ${track.type} at step ${currentStep}, track ${trackIndex}`
+          );
+          switch (track.type) {
+            case "synth":
+              track.synth?.triggerAttackRelease(
+                track.options?.note || "C4",
+                "8n",
+                time
+              );
+              break;
+            case "sampler":
+              track.sampler?.triggerAttackRelease("C5", "8n", time);
+              break;
+          }
+        }
+      });
+      currentStep = (currentStep + 1) % stepLength;
+    }, "16n");
+
+    return () => {
+      Tone.Transport.stop();
+      Tone.Transport.clear(loop);
+    };
   }, []);
 
   // Listen to isPlaying
   useEffect(() => {
     if (isPlaying) {
-      Transport.start();
+      Tone.Transport.start();
     } else {
-      Transport.stop();
-      dispatch(setValue(0));
+      Tone.Transport.stop();
     }
-  }, [Transport, dispatch, isPlaying, loop]);
+  }, [isPlaying]);
+
+  // Update track notes
+  const updateTrackNoteArray = (index: number, newNoteArray: boolean[]) => {
+    setTrackArray((prev) => {
+      const updatedTracks = [...prev];
+      updatedTracks[index] = {
+        ...updatedTracks[index],
+        noteArray: newNoteArray,
+      };
+      return updatedTracks;
+    });
+  };
 
   return (
     <div className="flex flex-col gap-2 ">
@@ -121,6 +145,7 @@ const Sequencer = () => {
           className="w-10"
         />
       </div>
+      {/* Step Visual Feedback */}
       <div className="flex gap-2">
         {stepArray.map((_step, index) => (
           <div
@@ -134,8 +159,16 @@ const Sequencer = () => {
         ))}
       </div>
       {/* Tracks */}
-      {trackArray.map((track: Track) => {
-        return mountTrack(track);
+      {trackArray.map((track, index) => {
+        return (
+          <Instrument
+            key={index}
+            track={track}
+            onUpdate={(newNoteArray) =>
+              updateTrackNoteArray(index, newNoteArray)
+            }
+          />
+        );
       })}
     </div>
   );
