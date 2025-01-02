@@ -7,7 +7,7 @@ import { Track } from "./types";
 
 const Sequencer = () => {
   const isPlaying = useSelector((state: RootState) => state.isPlaying.value);
-  const [stepLength, setStepLength] = useState<number>(16);
+  const [stepLength, setStepLength] = useState<number>(32);
   const [tempo, setTempo] = useState<number>(120);
   const stepRefs = useRef<HTMLDivElement[]>([]); // References to visual step elements
 
@@ -18,31 +18,31 @@ const Sequencer = () => {
       type: "synth",
       options: { note: "C4" },
       synth: new Tone.Synth().toDestination(),
-      noteArray: Array(16).fill(false),
+      noteArray: Array(32).fill(false),
     },
     {
       name: "Kick-Mid",
       type: "sampler",
       sampler: undefined,
-      noteArray: Array(16).fill(false),
+      noteArray: Array(32).fill(false),
     },
     {
       name: "Snare-Mid",
       type: "sampler",
       sampler: undefined,
-      noteArray: Array(16).fill(false),
+      noteArray: Array(32).fill(false),
     },
     {
       name: "Clap",
       type: "sampler",
       sampler: undefined,
-      noteArray: Array(16).fill(false),
+      noteArray: Array(32).fill(false),
     },
     {
       name: "Hihat",
       type: "sampler",
       sampler: undefined,
-      noteArray: Array(16).fill(false),
+      noteArray: Array(32).fill(false),
     },
   ]);
 
@@ -94,9 +94,10 @@ const Sequencer = () => {
   useEffect(() => {
     trackArrayRef.current = trackArray;
   }, [trackArray]);
+
   // main scheduleRepeat Loop
   useEffect(() => {
-    const stepLength = trackArrayRef.current[0]?.noteArray?.length || 16;
+    const stepLength = trackArrayRef.current[0]?.noteArray?.length || 32;
     let currentStep = 0;
 
     const loop = Tone.getTransport().scheduleRepeat((time) => {
@@ -133,6 +134,16 @@ const Sequencer = () => {
             prevStepRef.classList.add("bg-primaryContrast", "text-primary");
           }
 
+          // Reset second previous step to compensate for potential desync (getDraw missing a step in high tempo or high step resolution scenarios)
+          const prev2StepRefIndex =
+            (currentStep - 3 + stepRefs.current.length) %
+            stepRefs.current.length;
+          const prev2StepRef = stepRefs.current[prev2StepRefIndex];
+          if (prev2StepRef) {
+            prev2StepRef.classList.remove("bg-primary", "text-primaryContrast");
+            prev2StepRef.classList.add("bg-primaryContrast", "text-primary");
+          }
+
           // Draw current step
           const currentStepRefIndex =
             currentStep > 0 ? currentStep - 1 : stepLength - 1;
@@ -147,7 +158,7 @@ const Sequencer = () => {
           }
         }
       }, time);
-    }, "16n");
+    }, "32n");
 
     return () => {
       Tone.getTransport().stop();
@@ -209,7 +220,7 @@ const Sequencer = () => {
           <div
             key={`step-${index}`}
             ref={(el) => (stepRefs.current[index] = el!)} // Assign ref dynamically
-            className={`h-2 w-2 m-2 rounded bg-primaryContrast text-primary`}
+            className={`h-4 w-4 m-2 rounded-full bg-primaryContrast text-primary`}
           ></div>
         ))}
       </div>

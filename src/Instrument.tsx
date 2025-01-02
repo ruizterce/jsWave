@@ -23,7 +23,9 @@ const Instrument: React.FC<{
         {noteArray.map((note, index) => (
           <div
             key={index}
-            className={`h-6 w-6 rounded text-center cursor-pointer ${
+            className={`h-8 w-8 rounded text-center cursor-pointer ${
+              index % 4 === 0 ? "brightness-125" : ""
+            } ${
               note
                 ? "bg-primary text-primaryContrast"
                 : "bg-primaryContrast text-primary"
