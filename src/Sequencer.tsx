@@ -8,8 +8,8 @@ import { Track } from "./types";
 const Sequencer = () => {
   const isPlaying = useSelector((state: RootState) => state.isPlaying.value);
   const [stepLength, setStepLength] = useState<number>(16);
-  const [stepArray, setStepArray] = useState<boolean[]>(Array(16).fill(false));
   const [tempo, setTempo] = useState<number>(120);
+  const stepRefs = useRef<HTMLDivElement[]>([]); // References to visual step elements
 
   // Initialize Instruments
   const [trackArray, setTrackArray] = useState<Track[]>([
@@ -81,11 +81,11 @@ const Sequencer = () => {
     loadSamples().catch((err) => {
       console.log("Error loading samples: " + err);
     });
-  }, []); // Empty dependency array ensures this runs only once
+  }, []);
 
   // Handle tempo changes
   useEffect(() => {
-    Tone.Transport.bpm.value = tempo;
+    Tone.getTransport().bpm.value = tempo;
   }, [tempo]);
 
   // Store and update trackArray
@@ -99,12 +99,7 @@ const Sequencer = () => {
     const stepLength = trackArrayRef.current[0]?.noteArray?.length || 16;
     let currentStep = 0;
 
-    const loop = Tone.Transport.scheduleRepeat((time) => {
-      // Update stepArray for visual feedback - TODO refactor to avoid performance issues
-      //const newStepArray = Array(16).fill(false);
-      //newStepArray[currentStep] = true;
-      //setStepArray(newStepArray);
-
+    const loop = Tone.getTransport().scheduleRepeat((time) => {
       // Trigger track notes
       trackArrayRef.current.forEach((track) => {
         if (track.noteArray && track.noteArray[currentStep]) {
@@ -123,20 +118,49 @@ const Sequencer = () => {
         }
       });
       currentStep = (currentStep + 1) % stepLength;
+
+      // currentStep visual feedback - Manipulating DOM directly to optimize performance
+      Tone.getDraw().schedule(function () {
+        if (stepRefs.current.length) {
+          // Reset previous step
+          const prevStepRefIndex =
+            (currentStep - 2 + stepRefs.current.length) %
+            stepRefs.current.length;
+
+          const prevStepRef = stepRefs.current[prevStepRefIndex];
+          if (prevStepRef) {
+            prevStepRef.classList.remove("bg-primary", "text-primaryContrast");
+            prevStepRef.classList.add("bg-primaryContrast", "text-primary");
+          }
+
+          // Draw current step
+          const currentStepRefIndex =
+            currentStep > 0 ? currentStep - 1 : stepLength - 1;
+          const currentStepRef = stepRefs.current[currentStepRefIndex];
+
+          if (currentStepRef) {
+            currentStepRef.classList.add("bg-primary", "text-primaryContrast");
+            currentStepRef.classList.remove(
+              "bg-primaryContrast",
+              "text-primary"
+            );
+          }
+        }
+      }, time);
     }, "16n");
 
     return () => {
-      Tone.Transport.stop();
-      Tone.Transport.clear(loop);
+      Tone.getTransport().stop();
+      Tone.getTransport().clear(loop);
     };
   }, []);
 
   // Listen to isPlaying
   useEffect(() => {
     if (isPlaying) {
-      Tone.Transport.start();
+      Tone.getTransport().start();
     } else {
-      Tone.Transport.stop();
+      Tone.getTransport().stop();
     }
   }, [isPlaying]);
 
@@ -181,14 +205,11 @@ const Sequencer = () => {
       </div>
       {/* Step Visual Feedback */}
       <div className="flex gap-2">
-        {stepArray.map((_step, index) => (
+        {Array.from({ length: stepLength }).map((_step, index) => (
           <div
             key={`step-${index}`}
-            className={`h-2 w-2 m-2 rounded ${
-              stepArray[index]
-                ? "bg-primary text-primaryContrast"
-                : "bg-primaryContrast text-primary"
-            }`}
+            ref={(el) => (stepRefs.current[index] = el!)} // Assign ref dynamically
+            className={`h-2 w-2 m-2 rounded bg-primaryContrast text-primary`}
           ></div>
         ))}
       </div>
