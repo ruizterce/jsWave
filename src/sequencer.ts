@@ -3,17 +3,21 @@ import { Track } from "./track";
 
 export class Sequencer {
   private _name: string;
-  private tracks: Track[];
+  private _tracks: Track[];
   private isPlaying: boolean;
 
   constructor(name: string, tracks: Track[]) {
     this._name = name;
     this.isPlaying = false;
-    this.tracks = tracks;
+    this._tracks = tracks;
   }
 
   get name(): string {
     return this._name;
+  }
+
+  get tracks(): Track[] {
+    return this._tracks;
   }
 
   start(startTime: number | string = 0): void {

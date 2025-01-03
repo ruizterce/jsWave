@@ -5,6 +5,7 @@ import { RootState } from "./store/store";
 import PlayMenu from "./PlayMenu";
 import { Sequencer } from "./sequencer";
 import { Track } from "./track";
+import SequencerUI from "./SequencerUI";
 
 // Debugging transport position
 setInterval(() => {
@@ -25,7 +26,7 @@ const App = () => {
           "G4",
           ["A4", "G4"],
         ]),
-        new Track("synth1", "synth", ["C3", null, "C3", null]),
+        new Track("synth2", "synth", ["C3", null, "C3", null]),
       ]),
 
       new Sequencer("Sequencer 2", [
@@ -60,7 +61,9 @@ const App = () => {
     <div className="max-w-lg m-auto p-2 flex flex-col gap-4 items-center">
       <PlayMenu />
       {sequencers.current.map((sequencer: Sequencer) => {
-        return <div key={sequencer.name}>{sequencer.name}</div>;
+        if (sequencer) {
+          return <SequencerUI sequencer={sequencer} />;
+        }
       })}
     </div>
   );
