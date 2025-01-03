@@ -24,6 +24,7 @@ export class Track {
       sequenceNotes,
       "8n"
     );
+    console.log(`Track ${name} created`);
   }
 
   startSequence(startTime: number | string = 0): void {
@@ -31,6 +32,14 @@ export class Track {
   }
 
   stopSequence(): void {
-    this.sequence.stop();
+    this.sequence.stop(0);
+    this.sequence.cancel();
+  }
+
+  dispose(): void {
+    this.sequence.dispose();
+    if (this.instrument) {
+      this.instrument.dispose();
+    }
   }
 }
