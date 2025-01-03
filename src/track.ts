@@ -5,10 +5,10 @@ type Note = string | string[] | null;
 type SequenceNotes = Note[];
 
 export class Track {
-  name: string;
-  instrument: InstrumentType;
-  sequenceNotes: SequenceNotes;
-  sequence: Tone.Sequence;
+  private name: string;
+  private instrument: InstrumentType;
+  private sequenceNotes: SequenceNotes;
+  private sequence: Tone.Sequence;
 
   constructor(name: string, instrument: string, sequenceNotes: SequenceNotes) {
     this.name = name;
