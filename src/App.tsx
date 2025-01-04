@@ -6,15 +6,20 @@ import PlayMenu from "./PlayMenu";
 import { Sequencer } from "./sequencer";
 import { Track } from "./track";
 import SequencerUI from "./SequencerUI";
+import { Timeline } from "./timeline";
 
 // Debugging transport position
 setInterval(() => {
   console.log(Tone.getTransport().position);
+  console.log(Tone.getTransport().progress);
 }, 1000);
+
+const TIMELINE_LENGHT = 4;
 
 const App = () => {
   const isPlaying = useSelector((state: RootState) => state.isPlaying.value);
   const sequencers = useRef<Sequencer[]>([]);
+  const timeline = useRef<Timeline>();
 
   // Initialize sequencers
   useEffect(() => {
@@ -40,20 +45,33 @@ const App = () => {
     };
   }, []);
 
-  // Control transport and sequencers
+  // Initialize timeline
+  useEffect(() => {
+    timeline.current = new Timeline(TIMELINE_LENGHT, sequencers.current);
+  }, []);
+
+  // Initialize transport
+  useEffect(() => {
+    Tone.getTransport().bpm.value = 90;
+    Tone.getTransport().loop = true;
+    Tone.getTransport().loopStart = "0:0:0";
+    Tone.getTransport().loopEnd = "2:0:0";
+  }, []);
+
+  // Control sequencers
   useEffect(() => {
     if (sequencers.current) {
-      if (isPlaying) {
-        Tone.getTransport().start();
-        sequencers.current[0].start(0);
-        sequencers.current[1].start("1n");
-      } else {
-        sequencers.current.forEach((sequencer) => {
-          sequencer.stop();
-        });
-        Tone.getTransport().stop();
-        Tone.getTransport().cancel();
-      }
+      timeline.current?.addBlock(0, 0);
+      timeline.current?.addBlock(1, 1);
+    }
+  }, []);
+
+  // Control transport
+  useEffect(() => {
+    if (isPlaying) {
+      Tone.getTransport().start();
+    } else {
+      Tone.getTransport().stop();
     }
   }, [isPlaying]);
 

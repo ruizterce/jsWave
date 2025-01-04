@@ -1,5 +1,6 @@
 import * as Tone from "tone";
 import { InstrumentType, Notes } from "./types";
+import { Time } from "tone/build/esm/core/type/Units";
 
 export class Track {
   private _name: string;
@@ -28,12 +29,12 @@ export class Track {
     this.updateSequence(newNotes);
   }
 
-  startSequence(startTime: number | string = 0): void {
-    this.sequence.start(startTime);
+  startSequence(time: Time, startTime: number | undefined = 0): void {
+    this.sequence.start(time, startTime);
   }
 
-  stopSequence(): void {
-    this.sequence.stop(0);
+  stopSequence(stopTime: number | string = 0): void {
+    this.sequence.stop(stopTime);
     this.sequence.cancel();
   }
 

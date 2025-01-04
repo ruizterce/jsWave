@@ -1,3 +1,4 @@
+import { Time } from "tone/build/esm/core/type/Units";
 import { Track } from "./track";
 import { Notes } from "./types";
 
@@ -28,24 +29,24 @@ export class Sequencer {
     }
   }
 
-  start(startTime: number | string = 0): void {
+  start(time: Time, startTime: number | undefined): void {
     if (this.isPlaying) return;
     this.isPlaying = true;
-    this.tracks.forEach((track) => track.startSequence(startTime));
+    this.tracks.forEach((track) => track.startSequence(time, startTime));
   }
 
-  stop(): void {
+  stop(stopTime: number | string = 0): void {
     if (!this.isPlaying) return;
     this.isPlaying = false;
 
-    this.tracks.forEach((track) => track.stopSequence());
+    this.tracks.forEach((track) => track.stopSequence(stopTime));
   }
 
-  toggle(): void {
+  toggle(time: Time): void {
     if (this.isPlaying) {
       this.stop();
     } else {
-      this.start();
+      this.start(time, 0);
     }
   }
 
