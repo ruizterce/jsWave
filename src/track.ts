@@ -35,7 +35,13 @@ export class Track {
 
   stopSequence(stopTime: number | string = 0): void {
     this.sequence.stop(stopTime);
-    this.sequence.cancel();
+    this.sequence.cancel(stopTime);
+  }
+
+  resetSequence() {
+    this.sequence.clear();
+    this.sequence.dispose();
+    this.sequence = this.createSequence(this.notes);
   }
 
   dispose(): void {

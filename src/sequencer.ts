@@ -32,7 +32,9 @@ export class Sequencer {
   start(time: Time, startTime: number | undefined): void {
     if (this.isPlaying) return;
     this.isPlaying = true;
-    this.tracks.forEach((track) => track.startSequence(time, startTime));
+    this.tracks.forEach((track) => {
+      track.startSequence(time, startTime);
+    });
   }
 
   stop(stopTime: number | string = 0): void {
@@ -40,6 +42,10 @@ export class Sequencer {
     this.isPlaying = false;
 
     this.tracks.forEach((track) => track.stopSequence(stopTime));
+  }
+
+  resetSequences(): void {
+    this.tracks.forEach((track) => track.resetSequence());
   }
 
   toggle(time: Time): void {
