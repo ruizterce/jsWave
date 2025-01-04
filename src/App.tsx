@@ -62,7 +62,7 @@ const App = () => {
       <PlayMenu />
       {sequencers.current.map((sequencer: Sequencer) => {
         if (sequencer) {
-          return <SequencerUI sequencer={sequencer} />;
+          return <SequencerUI key={sequencer.name} sequencer={sequencer} />;
         }
       })}
     </div>

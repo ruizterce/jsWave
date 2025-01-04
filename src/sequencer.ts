@@ -1,5 +1,5 @@
-import * as Tone from "tone";
 import { Track } from "./track";
+import { Notes } from "./types";
 
 export class Sequencer {
   private _name: string;
@@ -18,6 +18,14 @@ export class Sequencer {
 
   get tracks(): Track[] {
     return this._tracks;
+  }
+
+  setTrackNotes(trackIndex: number, newNotes: Notes): void {
+    if (this._tracks[trackIndex]) {
+      this._tracks[trackIndex].notes = newNotes;
+    } else {
+      throw new Error(`Track at index ${trackIndex} does not exist.`);
+    }
   }
 
   start(startTime: number | string = 0): void {
@@ -44,7 +52,5 @@ export class Sequencer {
   dispose(): void {
     // Cleanup resources
     this.tracks.forEach((track) => track.dispose());
-    Tone.getTransport().stop();
-    Tone.getTransport().cancel();
   }
 }

@@ -1,8 +1,5 @@
 import * as Tone from "tone";
-
-type InstrumentType = Tone.Synth | null;
-type Note = string | string[] | null;
-type Notes = Note[];
+import { InstrumentType, Notes } from "./types";
 
 export class Track {
   private _name: string;
@@ -12,19 +9,10 @@ export class Track {
 
   constructor(name: string, instrument: string, notes: Notes) {
     this._name = name;
-    this.instrument =
-      instrument === "synth" ? new Tone.Synth().toDestination() : null;
+    this.instrument = this.createInstrument(instrument);
     this._notes = notes;
-    this.sequence = new Tone.Sequence(
-      (time, note) => {
-        if (this.instrument) {
-          this.instrument.triggerAttackRelease(note as string, 0.1, time);
-        }
-      },
-      notes,
-      "8n"
-    );
-    console.log(`Track ${name} created`);
+    this.sequence = this.createSequence(notes);
+    console.log(`Track "${name}" created`);
   }
 
   get name(): string {
@@ -35,8 +23,9 @@ export class Track {
     return this._notes;
   }
 
-  set notes(newNotes) {
+  set notes(newNotes: Notes) {
     this._notes = newNotes;
+    this.updateSequence(newNotes);
   }
 
   startSequence(startTime: number | string = 0): void {
@@ -50,8 +39,25 @@ export class Track {
 
   dispose(): void {
     this.sequence.dispose();
-    if (this.instrument) {
-      this.instrument.dispose();
-    }
+    this.instrument?.dispose();
+  }
+
+  private createInstrument(instrumentType: string): InstrumentType {
+    return instrumentType === "synth" ? new Tone.Synth().toDestination() : null;
+  }
+
+  private createSequence(notes: Notes): Tone.Sequence {
+    return new Tone.Sequence(
+      (time, note) => {
+        this.instrument?.triggerAttackRelease(note as string, 0.1, time);
+      },
+      notes,
+      "8n"
+    );
+  }
+
+  private updateSequence(notes: Notes): void {
+    this.sequence.dispose();
+    this.sequence = this.createSequence(notes).start(0);
   }
 }
