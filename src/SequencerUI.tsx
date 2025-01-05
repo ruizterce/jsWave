@@ -1,11 +1,16 @@
 import { useState } from "react";
-import { Sequencer } from "./sequencer";
+import { Timeline } from "./timeline";
 
 interface SequencerUIProps {
-  sequencer: Sequencer;
+  timeline: Timeline;
+  sequencerIndex: number;
 }
 
-const SequencerUI: React.FC<SequencerUIProps> = ({ sequencer }) => {
+const SequencerUI: React.FC<SequencerUIProps> = ({
+  timeline,
+  sequencerIndex,
+}) => {
+  const sequencer = timeline.sequencers[sequencerIndex];
   const [, forceUpdate] = useState({}); // Dummy state to trigger re-render
 
   const handleNoteClick = (trackIndex: number, noteIndex: number) => {
@@ -14,6 +19,8 @@ const SequencerUI: React.FC<SequencerUIProps> = ({ sequencer }) => {
     notes[noteIndex] = newNote;
     // Update sequencer's track's notes
     sequencer.setTrackNotes(trackIndex, notes);
+    // Reschedule timeline sequences
+    timeline.rescheduleSequencer(sequencerIndex);
     // Force a re-render by updating dummy state
     forceUpdate({});
   };

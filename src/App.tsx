@@ -64,9 +64,15 @@ const App = () => {
       <PlayMenu />
       {timeline ? <TimelineUI timeline={timeline} /> : "No timeline"}
 
-      {sequencers.map((sequencer: Sequencer) => {
+      {timeline.sequencers.map((sequencer: Sequencer, index) => {
         if (sequencer) {
-          return <SequencerUI key={sequencer.name} sequencer={sequencer} />;
+          return (
+            <SequencerUI
+              key={`SequencerUI-${index}`}
+              timeline={timeline}
+              sequencerIndex={index}
+            />
+          );
         }
       })}
     </div>

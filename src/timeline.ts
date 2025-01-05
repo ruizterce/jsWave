@@ -2,12 +2,12 @@ import { Sequencer } from "./sequencer";
 
 export class Timeline {
   private _length: number;
-  private sequencers: Sequencer[];
+  private _sequencers: Sequencer[];
   private _events: boolean[][];
 
   constructor(length: number, sequencers: Sequencer[]) {
     this._length = length;
-    this.sequencers = sequencers;
+    this._sequencers = sequencers;
     this._events = Array.from({ length: sequencers.length }, () =>
       Array.from({ length }, () => false)
     );
@@ -15,6 +15,10 @@ export class Timeline {
 
   get length(): number {
     return this._length;
+  }
+
+  get sequencers(): Sequencer[] {
+    return this._sequencers;
   }
 
   get events(): boolean[][] {
@@ -28,7 +32,7 @@ export class Timeline {
   addBlock(sequencerIndex: number, barIndex: number): void {
     console.log("Adding block " + sequencerIndex + " " + barIndex);
 
-    const sequencer = this.sequencers[sequencerIndex];
+    const sequencer = this._sequencers[sequencerIndex];
 
     // Check for future active blocks in the same sequencer
     const futureActiveBlocks = this._events[sequencerIndex]
@@ -68,7 +72,7 @@ export class Timeline {
   }
 
   removeBlock(sequencerIndex: number, barIndex: number): void {
-    const sequencer = this.sequencers[sequencerIndex];
+    const sequencer = this._sequencers[sequencerIndex];
 
     if (sequencer) {
       // Check for other active blocks in the same sequencer
@@ -90,5 +94,18 @@ export class Timeline {
       this._events[sequencerIndex][barIndex] = false;
     }
     console.log(this._events);
+  }
+
+  rescheduleSequencer(sequencerIndex: number): void {
+    const sequencer = this._sequencers[sequencerIndex];
+    this._events[sequencerIndex].forEach((bar, index) => {
+      if (bar) {
+        const start = `${index}:0:0`;
+        const end = `${index + 1}:0:0`;
+
+        sequencer.start(start, 0);
+        sequencer.stop(end);
+      }
+    });
   }
 }

@@ -65,6 +65,6 @@ export class Track {
 
   private updateSequence(notes: Notes): void {
     this.sequence.dispose();
-    this.sequence = this.createSequence(notes).start(0);
+    this.sequence = this.createSequence(notes);
   }
 }
