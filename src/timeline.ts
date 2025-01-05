@@ -1,4 +1,6 @@
 import { Sequencer } from "./sequencer";
+import { Track } from "./track";
+import { Notes } from "./types";
 
 export class Timeline {
   private _length: number;
@@ -106,5 +108,22 @@ export class Timeline {
         sequencer.stop(end);
       }
     });
+  }
+
+  addSequencer(name: string): void {
+    this._sequencers.push(
+      new Sequencer(name, [
+        new Track("synth1", "synth", Array(16).fill(null) as Notes),
+      ])
+    );
+    const length = this._length;
+    this._events.push(Array.from({ length }, () => false));
+    console.log(this._events);
+  }
+
+  removeSequencer(sequencerIndex: number): void {
+    this._sequencers[sequencerIndex].dispose();
+    this._sequencers.splice(sequencerIndex, 1);
+    this._events.splice(sequencerIndex, 1);
   }
 }

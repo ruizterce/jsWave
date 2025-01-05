@@ -12,6 +12,7 @@ const SequencerUI: React.FC<SequencerUIProps> = ({
 }) => {
   const sequencer = timeline.sequencers[sequencerIndex];
   const [progress, setProgress] = useState(0);
+  const [isAddSamplerMenuOpen, setIsAddSamplerMenuOpen] = useState(false);
   const [, forceUpdate] = useState({}); // Dummy state to trigger re-render
 
   // Update progress
@@ -39,13 +40,14 @@ const SequencerUI: React.FC<SequencerUIProps> = ({
   };
 
   const notesLength =
-    timeline.sequencers[sequencerIndex].tracks[0].notes.length;
+    timeline.sequencers[sequencerIndex].tracks[0]?.notes.length || 16;
   const activeBlock = Math.floor(progress * notesLength);
 
   return (
-    <div>
+    <div className="p-4 bg-stone-300 rounded">
+      <div className="text-center">{sequencer.name}</div>
       {/* Progress Tracker */}
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 p-2 bg-stone-100 rounded">
         {Array.from(
           {
             length: notesLength,
@@ -62,34 +64,117 @@ const SequencerUI: React.FC<SequencerUIProps> = ({
           )
         )}
       </div>
-
-      <div>{sequencer.name}</div>
-      {sequencer.tracks.map((track, trackIndex) => {
-        return (
-          <div key={track.name}>
-            <div>{track.name}</div>
-            <div className="flex gap-2">
-              {track.notes.map((note, noteIndex) => (
-                <div
-                  key={noteIndex}
-                  className={`h-8 w-8 rounded text-center cursor-pointer ${
-                    noteIndex % 4 === 0 ? "brightness-125" : ""
-                  } ${
-                    note
-                      ? "bg-primary text-primaryContrast"
-                      : "bg-primaryContrast text-primary"
-                  }`}
-                  onClick={() => {
-                    handleNoteClick(trackIndex, noteIndex);
-                  }}
-                >
-                  {noteIndex + 1}
-                </div>
-              ))}
+      {/* Sequencer Tracks */}
+      {sequencer.tracks.length > 0 &&
+        sequencer.tracks.map((track, trackIndex) => {
+          return (
+            <div key={track.name} className="p-2 bg-stone-100 rounded">
+              <div>{track.name}</div>
+              <div className="flex gap-2">
+                {track.notes.map((note, noteIndex) => (
+                  <div
+                    key={noteIndex}
+                    className={`h-8 w-8 rounded text-center cursor-pointer ${
+                      noteIndex % 4 === 0 ? "brightness-125" : ""
+                    } ${
+                      note
+                        ? "bg-primary text-primaryContrast"
+                        : "bg-primaryContrast text-primary"
+                    }`}
+                    onClick={() => {
+                      handleNoteClick(trackIndex, noteIndex);
+                    }}
+                  >
+                    {noteIndex + 1}
+                  </div>
+                ))}
+              </div>
+              <button
+                className="p-1 bg-red-400 rounded-full text-xs"
+                onClick={() => {
+                  sequencer.removeTrack(trackIndex);
+                  forceUpdate({});
+                }}
+              >
+                X
+              </button>
             </div>
+          );
+        })}
+
+      {/* Add Buttons*/}
+      <button
+        className="m-2 p-2 bg-secondary rounded hover:bg-gray-50"
+        onClick={() => {
+          sequencer.addTrack(`Synth-${sequencer.tracks.length + 1}`, "synth");
+          forceUpdate({});
+        }}
+      >
+        Add Synth
+      </button>
+
+      <div className="relative inline-block text-left">
+        <div>
+          <button
+            type="button"
+            className="m-2 p-2 bg-secondary rounded hover:bg-gray-50"
+            onClick={() => {
+              setIsAddSamplerMenuOpen(!isAddSamplerMenuOpen);
+            }}
+          >
+            Add Sampler
+          </button>
+        </div>
+
+        {/* Add Sampler Dropdown */}
+        <div
+          className={`absolute left-32 bottom-2 rounded bg-secondary shadow-lg ${
+            isAddSamplerMenuOpen ? "" : "hidden"
+          }`}
+        >
+          <div>
+            <button
+              className="p-2 w-full rounded hover:bg-gray-50"
+              onClick={() => {
+                sequencer.addTrack(
+                  `Kick-${sequencer.tracks.length + 1}`,
+                  "sampler",
+                  "TR-808/Kick-Long.mp3"
+                );
+                forceUpdate({});
+              }}
+            >
+              Kick
+            </button>
+            <button
+              className="p-2 w-full rounded hover:bg-gray-50"
+              onClick={() => {
+                sequencer.addTrack(
+                  `Snare-${sequencer.tracks.length + 1}`,
+                  "sampler",
+                  "TR-808/Snare-Mid.mp3"
+                );
+                forceUpdate({});
+              }}
+            >
+              Snare
+            </button>
+            <button
+              className="p-2 w-full rounded hover:bg-gray-50"
+              onClick={() => {
+                sequencer.addTrack(
+                  `Hihat-${sequencer.tracks.length + 1}`,
+                  "sampler",
+                  "TR-808/Hihat.mp3"
+                );
+                forceUpdate({});
+              }}
+            >
+              Hihat
+            </button>
           </div>
-        );
-      })}
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import * as Tone from "tone";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "./store/store";
 import PlayMenu from "./PlayMenu";
@@ -142,6 +142,7 @@ timeline.addBlock(0, 0);
 
 const App = () => {
   const isPlaying = useSelector((state: RootState) => state.isPlaying.value);
+  const [, forceUpdate] = useState({}); // Dummy state to trigger re-render
 
   // Control transport
   useEffect(() => {
@@ -161,14 +162,34 @@ const App = () => {
       <PlayMenu />
       {timeline ? <TimelineUI timeline={timeline} /> : "No timeline"}
 
-      {timeline.sequencers.map((sequencer: Sequencer, index) => {
+      <button
+        className="m-2 p-2 bg-secondary rounded"
+        onClick={() => {
+          timeline.addSequencer(`Sequencer-${timeline.sequencers.length + 1}`);
+          forceUpdate({});
+        }}
+      >
+        Add Sequencer
+      </button>
+
+      {timeline.sequencers.map((sequencer: Sequencer, sequencerIndex) => {
         if (sequencer) {
           return (
-            <SequencerUI
-              key={`SequencerUI-${index}`}
-              timeline={timeline}
-              sequencerIndex={index}
-            />
+            <div key={`SequencerUI-${sequencerIndex}`}>
+              <SequencerUI
+                timeline={timeline}
+                sequencerIndex={sequencerIndex}
+              />
+              <button
+                className="p-1 bg-red-400 rounded-full text-xs"
+                onClick={() => {
+                  timeline.removeSequencer(sequencerIndex);
+                  forceUpdate({});
+                }}
+              >
+                X
+              </button>
+            </div>
           );
         }
       })}

@@ -21,14 +21,6 @@ export class Sequencer {
     return this._tracks;
   }
 
-  setTrackNotes(trackIndex: number, newNotes: Notes): void {
-    if (this._tracks[trackIndex]) {
-      this._tracks[trackIndex].notes = newNotes;
-    } else {
-      throw new Error(`Track at index ${trackIndex} does not exist.`);
-    }
-  }
-
   start(time: Time, startTime: number | undefined): void {
     if (this.isPlaying) return;
     this.isPlaying = true;
@@ -44,10 +36,6 @@ export class Sequencer {
     this.tracks.forEach((track) => track.stopSequence(stopTime));
   }
 
-  resetSequences(): void {
-    this.tracks.forEach((track) => track.resetSequence());
-  }
-
   toggle(time: Time): void {
     if (this.isPlaying) {
       this.stop();
@@ -59,5 +47,50 @@ export class Sequencer {
   dispose(): void {
     // Cleanup resources
     this.tracks.forEach((track) => track.dispose());
+  }
+
+  setTrackNotes(trackIndex: number, newNotes: Notes): void {
+    if (this._tracks[trackIndex]) {
+      this._tracks[trackIndex].notes = newNotes;
+    } else {
+      throw new Error(`Track at index ${trackIndex} does not exist.`);
+    }
+  }
+
+  resetSequences(): void {
+    this.tracks.forEach((track) => track.resetSequence());
+  }
+
+  addTrack(name: string, instrumentType: string, sampleUrl?: string): void {
+    this._tracks.push(
+      new Track(
+        name,
+        instrumentType,
+        [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+        ],
+        sampleUrl
+      )
+    );
+  }
+
+  removeTrack(trackIndex: number): void {
+    this._tracks[trackIndex].dispose();
+    this._tracks.splice(trackIndex, 1);
   }
 }
