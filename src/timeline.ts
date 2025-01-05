@@ -33,6 +33,7 @@ export class Timeline {
     console.log("Adding block " + sequencerIndex + " " + barIndex);
 
     const sequencer = this._sequencers[sequencerIndex];
+    this._events[sequencerIndex][barIndex] = true;
 
     // Check for future active blocks in the same sequencer
     const futureActiveBlocks = this._events[sequencerIndex]
@@ -40,14 +41,14 @@ export class Timeline {
       .filter((index) => index >= barIndex + 1);
 
     if (futureActiveBlocks.length > 0) {
-      // Reset the sequencer if there are active blocks in the future
+      // Check for other active blocks in the same sequencer
+      const activeBars = this._events[sequencerIndex]
+        .map((isActive, index) => (isActive ? index : -1))
+        .filter((index) => index !== -1);
+
+      // Reset all scheduled sequences
       sequencer.resetSequences();
 
-      // Collect all active blocks (including the new one)
-      const activeBars = [...futureActiveBlocks, barIndex].sort(
-        (a, b) => a - b
-      );
-      console.log(activeBars);
       // Reschedule all active blocks
       for (const activeBar of activeBars) {
         const start = `${activeBar}:0:0`;
@@ -55,8 +56,6 @@ export class Timeline {
 
         sequencer.start(start, 0);
         sequencer.stop(end);
-
-        this._events[sequencerIndex][activeBar] = true;
       }
     } else {
       // No future active blocks, simply schedule the new block
