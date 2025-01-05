@@ -4,13 +4,20 @@ import { Time } from "tone/build/esm/core/type/Units";
 
 export class Track {
   private _name: string;
-  private instrument: InstrumentType;
+  private _instrument: InstrumentType;
   private _notes: Notes;
   private _sequence: Tone.Sequence;
+  private _sampleUrl: string | undefined;
 
-  constructor(name: string, instrument: string, notes: Notes) {
+  constructor(
+    name: string,
+    instrumentType: string,
+    notes: Notes,
+    sampleUrl?: string
+  ) {
     this._name = name;
-    this.instrument = this.createInstrument(instrument);
+    this._sampleUrl = sampleUrl;
+    this._instrument = this.createInstrument(instrumentType);
     this._notes = notes;
     this._sequence = this.createSequence(notes);
     console.log(`Track "${name}" created`);
@@ -49,18 +56,36 @@ export class Track {
   }
 
   dispose(): void {
-    this._sequence.dispose();
-    this.instrument?.dispose();
+    this._sequence?.dispose();
+    this._instrument?.dispose();
   }
 
   private createInstrument(instrumentType: string): InstrumentType {
-    return instrumentType === "synth" ? new Tone.Synth().toDestination() : null;
+    switch (instrumentType) {
+      case "synth":
+        return new Tone.Synth().toDestination();
+      case "sampler":
+        console.log(this._sampleUrl);
+        if (this._sampleUrl) {
+          console.log(this._sampleUrl);
+          return new Tone.Sampler({
+            urls: {
+              C5: this._sampleUrl,
+            },
+            baseUrl: "src/assets/samples/",
+          }).toDestination();
+        } else {
+          return null;
+        }
+      default:
+        return null;
+    }
   }
 
   private createSequence(notes: Notes): Tone.Sequence {
     return new Tone.Sequence(
       (time, note) => {
-        this.instrument?.triggerAttackRelease(note as string, 0.1, time);
+        this._instrument?.triggerAttackRelease(note as string, 0.1, time);
       },
       notes,
       "16n"
