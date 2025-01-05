@@ -1,11 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import * as Tone from "tone";
 import { Timeline } from "./timeline";
 
 interface TimelineUIProps {
   timeline: Timeline;
 }
 const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
+  const [progress, setProgress] = useState(0);
   const [, forceUpdate] = useState({}); // Dummy state to trigger re-render
+
+  // Update progress
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setProgress(Tone.getTransport().progress);
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handleBlockClick = (sequencerIndex: number, barIndex: number) => {
     if (timeline.events[sequencerIndex][barIndex]) {
@@ -17,8 +28,25 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
     forceUpdate({});
   };
 
+  const activeBlock = Math.floor(progress * timeline.length);
+
   return (
     <div>
+      {/* Progress Tracker */}
+      <div className="flex gap-2 mb-4">
+        {Array.from({ length: timeline.length }, (_, index) => (
+          <div
+            key={`progress-square-${index}`}
+            className={`w-4 h-4 rounded-full ${
+              index === activeBlock
+                ? "bg-primary text-primaryContrast"
+                : "bg-gray-200"
+            }`}
+          ></div>
+        ))}
+      </div>
+
+      {/* Timeline Blocks */}
       <div className="flex flex-col gap-2">
         {timeline.events.map((sequencer, sequencerIndex) => {
           return (

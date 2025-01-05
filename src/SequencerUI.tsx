@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Timeline } from "./timeline";
 
 interface SequencerUIProps {
@@ -11,7 +11,20 @@ const SequencerUI: React.FC<SequencerUIProps> = ({
   sequencerIndex,
 }) => {
   const sequencer = timeline.sequencers[sequencerIndex];
+  const [progress, setProgress] = useState(0);
   const [, forceUpdate] = useState({}); // Dummy state to trigger re-render
+
+  // Update progress
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setProgress(
+        timeline.sequencers[sequencerIndex].tracks[0].sequence.progress
+      );
+      console.log();
+    }, 50);
+
+    return () => clearInterval(interval);
+  }, [sequencerIndex, timeline.sequencers]);
 
   const handleNoteClick = (trackIndex: number, noteIndex: number) => {
     const notes = sequencer.tracks[trackIndex].notes;
@@ -25,8 +38,31 @@ const SequencerUI: React.FC<SequencerUIProps> = ({
     forceUpdate({});
   };
 
+  const notesLength =
+    timeline.sequencers[sequencerIndex].tracks[0].notes.length;
+  const activeBlock = Math.floor(progress * notesLength);
+
   return (
     <div>
+      {/* Progress Tracker */}
+      <div className="flex gap-2 mb-4">
+        {Array.from(
+          {
+            length: notesLength,
+          },
+          (_, index) => (
+            <div
+              key={`progress-square-${index}`}
+              className={`w-4 h-4 m-2 rounded-full ${
+                index === activeBlock
+                  ? "bg-primary text-primaryContrast"
+                  : "bg-gray-200"
+              }`}
+            ></div>
+          )
+        )}
+      </div>
+
       <div>{sequencer.name}</div>
       {sequencer.tracks.map((track, trackIndex) => {
         return (

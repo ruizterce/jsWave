@@ -6,13 +6,13 @@ export class Track {
   private _name: string;
   private instrument: InstrumentType;
   private _notes: Notes;
-  private sequence: Tone.Sequence;
+  private _sequence: Tone.Sequence;
 
   constructor(name: string, instrument: string, notes: Notes) {
     this._name = name;
     this.instrument = this.createInstrument(instrument);
     this._notes = notes;
-    this.sequence = this.createSequence(notes);
+    this._sequence = this.createSequence(notes);
     console.log(`Track "${name}" created`);
   }
 
@@ -29,23 +29,27 @@ export class Track {
     this.updateSequence(newNotes);
   }
 
+  get sequence(): Tone.Sequence {
+    return this._sequence;
+  }
+
   startSequence(time: Time, startTime: number | undefined = 0): void {
-    this.sequence.start(time, startTime);
+    this._sequence.start(time, startTime);
   }
 
   stopSequence(stopTime: number | string = 0): void {
-    this.sequence.stop(stopTime);
-    this.sequence.cancel(stopTime);
+    this._sequence.stop(stopTime);
+    this._sequence.cancel(stopTime);
   }
 
   resetSequence() {
-    this.sequence.clear();
-    this.sequence.dispose();
-    this.sequence = this.createSequence(this.notes);
+    this._sequence.clear();
+    this._sequence.dispose();
+    this._sequence = this.createSequence(this.notes);
   }
 
   dispose(): void {
-    this.sequence.dispose();
+    this._sequence.dispose();
     this.instrument?.dispose();
   }
 
@@ -59,12 +63,12 @@ export class Track {
         this.instrument?.triggerAttackRelease(note as string, 0.1, time);
       },
       notes,
-      "8n"
+      "16n"
     );
   }
 
   private updateSequence(notes: Notes): void {
-    this.sequence.dispose();
-    this.sequence = this.createSequence(notes);
+    this._sequence.dispose();
+    this._sequence = this.createSequence(notes);
   }
 }
