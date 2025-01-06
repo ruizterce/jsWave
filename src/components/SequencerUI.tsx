@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Timeline } from "../classes/timeline";
 import useContextMenu from "../hooks/useContextMenu";
 import ContextMenu from "../components/ContextMenu";
-import { KEYS } from "../models/keys";
+import TrackUI from "./TrackUI";
 
 interface SequencerUIProps {
   timeline: Timeline;
@@ -21,43 +21,15 @@ const SequencerUI: React.FC<SequencerUIProps> = ({
   // Update progress
   useEffect(() => {
     const interval = setInterval(() => {
-      setProgress(
-        timeline.sequencers[sequencerIndex].tracks[0].sequence.progress
-      );
+      if (timeline.sequencers[sequencerIndex].tracks[0]) {
+        setProgress(
+          timeline.sequencers[sequencerIndex].tracks[0].sequence.progress
+        );
+      }
     }, 50);
 
     return () => clearInterval(interval);
   }, [sequencerIndex, timeline.sequencers]);
-
-  // Handle note click
-  const handleNoteClick = (trackIndex: number, noteIndex: number) => {
-    const notes = sequencer.tracks[trackIndex].notes;
-    const newNote = notes[noteIndex] ? null : "C5";
-    notes[noteIndex] = newNote;
-    sequencer.setTrackNotes(trackIndex, notes);
-    timeline.rescheduleSequencer(sequencerIndex);
-    forceUpdate({});
-  };
-
-  // Handle note context menu
-  const handleNoteChange = (newNote: string) => {
-    if (
-      contextMenu.data &&
-      "trackIndex" in contextMenu.data &&
-      "noteIndex" in contextMenu.data
-    ) {
-      const { trackIndex, noteIndex } = contextMenu.data;
-      const notes = sequencer.tracks[trackIndex].notes;
-      notes[noteIndex] = newNote;
-      sequencer.setTrackNotes(trackIndex, notes);
-      timeline.rescheduleSequencer(sequencerIndex);
-      closeMenu();
-      forceUpdate({});
-    } else {
-      alert("Error: Invalid context menu data.");
-      closeMenu();
-    }
-  };
 
   // Handle sampler context menu
   const handleAddSamplerClick = (samplePath: string) => {
@@ -98,56 +70,18 @@ const SequencerUI: React.FC<SequencerUIProps> = ({
         )}
       </div>
       {/* Sequencer Tracks */}
-      {sequencer.tracks.length > 0 &&
-        sequencer.tracks.map((track, trackIndex) => {
-          return (
-            <div key={track.name} className="p-2 bg-stone-100 rounded">
-              <div>{track.name}</div>
-              <div className="flex gap-2">
-                {track.notes.map((note, noteIndex) => (
-                  <div
-                    key={noteIndex}
-                    className={`h-8 w-8 rounded text-center cursor-pointer ${
-                      noteIndex % 4 === 0 ? "brightness-125" : ""
-                    } ${
-                      note
-                        ? "bg-primary text-primaryContrast"
-                        : "bg-primaryContrast text-primary"
-                    }`}
-                    onClick={() => handleNoteClick(trackIndex, noteIndex)}
-                    onContextMenu={(e) =>
-                      openMenu(e, { type: "note", trackIndex, noteIndex })
-                    }
-                  >
-                    {note || noteIndex + 1}
-                  </div>
-                ))}
-              </div>
-              <button
-                className="p-1 bg-red-400 rounded-full text-xs"
-                onClick={() => {
-                  sequencer.removeTrack(trackIndex);
-                  forceUpdate({});
-                }}
-              >
-                X
-              </button>
-            </div>
-          );
-        })}
-
-      {/* Context Menu for Notes */}
-      {contextMenu.open && contextMenu.data?.type === "note" && (
-        <ContextMenu
-          x={contextMenu.x}
-          y={contextMenu.y}
-          menuRef={menuRef}
-          items={KEYS.map((note) => ({
-            label: note,
-            onClick: () => handleNoteChange(note),
-          }))}
+      {sequencer.tracks.map((track, trackIndex) => (
+        <TrackUI
+          key={track.name}
+          timeline={timeline}
+          sequencerIndex={sequencerIndex}
+          trackIndex={trackIndex}
+          removeTrack={(trackIndex) => {
+            sequencer.removeTrack(trackIndex);
+            forceUpdate({});
+          }}
         />
-      )}
+      ))}
 
       {/* Add Buttons*/}
       <button
