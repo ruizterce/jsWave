@@ -21,10 +21,6 @@ const TrackUI: React.FC<TrackUIProps> = ({
 }) => {
   const sequencer = timeline.sequencers[sequencerIndex];
   const track = sequencer.tracks[trackIndex];
-  const [noteDuration, setNoteDuration] = useState<string | number>(
-    track.noteDuration
-  );
-  const [volume, setVolume] = useState(track.volume);
   const [, forceUpdate] = useState({}); // Dummy state to trigger re-render
   const { contextMenu, openMenu, closeMenu, menuRef } = useContextMenu();
 
@@ -60,13 +56,14 @@ const TrackUI: React.FC<TrackUIProps> = ({
 
   const handleVolumeChange = (newVolume: number) => {
     track.volume = newVolume;
-    setVolume(newVolume);
+    forceUpdate({});
   };
 
   const handleNoteDurationChange = (newNoteDuration: string | number) => {
     track.noteDuration = newNoteDuration;
-    setNoteDuration(newNoteDuration);
     timeline.rescheduleSequencer(sequencerIndex);
+    closeMenu();
+    forceUpdate({});
   };
 
   return (
@@ -112,7 +109,7 @@ const TrackUI: React.FC<TrackUIProps> = ({
           type="range"
           min="-60"
           max="0"
-          value={volume}
+          value={track.volume}
           onChange={(e) => {
             handleVolumeChange(parseInt(e.target.value));
           }}
@@ -124,7 +121,7 @@ const TrackUI: React.FC<TrackUIProps> = ({
           }}
           className="px-2 bg-secondary rounded"
         >
-          {noteDuration}
+          {track.noteDuration}
         </button>
 
         {/* Context Menu for Subdivisions */}
