@@ -76,6 +76,14 @@ const SequencerUI: React.FC<SequencerUIProps> = ({
           timeline={timeline}
           sequencerIndex={sequencerIndex}
           trackIndex={trackIndex}
+          moveTrackUp={(trackIndex) => {
+            sequencer.moveTrackUp(trackIndex);
+            forceUpdate({});
+          }}
+          moveTrackDown={(trackIndex) => {
+            sequencer.moveTrackDown(trackIndex);
+            forceUpdate({});
+          }}
           removeTrack={(trackIndex) => {
             sequencer.removeTrack(trackIndex);
             forceUpdate({});

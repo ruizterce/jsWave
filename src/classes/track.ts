@@ -29,6 +29,10 @@ export class Track {
     return this._name;
   }
 
+  set name(newName: string) {
+    this._name = newName;
+  }
+
   get notes(): Notes {
     return this._notes;
   }

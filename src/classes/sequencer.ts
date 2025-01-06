@@ -5,12 +5,10 @@ import { Notes } from "../types";
 export class Sequencer {
   private _name: string;
   private _tracks: Track[];
-  private isPlaying: boolean;
   private _events: boolean[];
 
   constructor(name: string, length: number, tracks: Track[]) {
     this._name = name;
-    this.isPlaying = false;
     this._tracks = tracks;
     this._events = Array.from({ length }, () => false);
   }
@@ -36,26 +34,13 @@ export class Sequencer {
   }
 
   start(time: Time, startTime: number | undefined): void {
-    if (this.isPlaying) return;
-    this.isPlaying = true;
     this.tracks.forEach((track) => {
       track.startSequence(time, startTime);
     });
   }
 
   stop(stopTime: number | string = 0): void {
-    if (!this.isPlaying) return;
-    this.isPlaying = false;
-
     this.tracks.forEach((track) => track.stopSequence(stopTime));
-  }
-
-  toggle(time: Time): void {
-    if (this.isPlaying) {
-      this.stop();
-    } else {
-      this.start(time, 0);
-    }
   }
 
   dispose(): void {
@@ -84,5 +69,21 @@ export class Sequencer {
   removeTrack(trackIndex: number): void {
     this._tracks[trackIndex].dispose();
     this._tracks.splice(trackIndex, 1);
+  }
+
+  moveTrackUp(trackIndex: number): void {
+    if (trackIndex > 0) {
+      const temp = this._tracks[trackIndex];
+      this._tracks[trackIndex] = this._tracks[trackIndex - 1];
+      this._tracks[trackIndex - 1] = temp;
+    }
+  }
+
+  moveTrackDown(trackIndex: number): void {
+    if (trackIndex < this._tracks.length - 1) {
+      const temp = this._tracks[trackIndex];
+      this._tracks[trackIndex] = this._tracks[trackIndex + 1];
+      this._tracks[trackIndex + 1] = temp;
+    }
   }
 }

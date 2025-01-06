@@ -1,4 +1,5 @@
 import { useState } from "react";
+import * as Tone from "tone";
 import { Note } from "../types";
 import { Timeline } from "../classes/timeline";
 import useContextMenu from "../hooks/useContextMenu";
@@ -10,6 +11,8 @@ interface TrackUIProps {
   timeline: Timeline;
   sequencerIndex: number;
   trackIndex: number;
+  moveTrackUp: (trackIndex: number) => void;
+  moveTrackDown: (trackIndex: number) => void;
   removeTrack: (trackIndex: number) => void;
 }
 
@@ -17,6 +20,8 @@ const TrackUI: React.FC<TrackUIProps> = ({
   timeline,
   sequencerIndex,
   trackIndex,
+  moveTrackUp,
+  moveTrackDown,
   removeTrack,
 }) => {
   const sequencer = timeline.sequencers[sequencerIndex];
@@ -68,7 +73,15 @@ const TrackUI: React.FC<TrackUIProps> = ({
 
   return (
     <div className="p-2 bg-stone-100 rounded">
-      <div>{track.name}</div>
+      <input
+        className=""
+        value={track.name}
+        disabled={Tone.getTransport().state === "started"}
+        onChange={(e) => {
+          track.name = e.target.value;
+          forceUpdate({});
+        }}
+      />
       <div className="flex gap-2">
         {track.notes.map((note: Note, noteIndex: number) => (
           <div
@@ -103,8 +116,8 @@ const TrackUI: React.FC<TrackUIProps> = ({
         />
       )}
 
-      {/* Track Parameters */}
-      <div className="flex gap-4 w-full justify-between">
+      {/* Track Controls */}
+      <div className="flex gap-4 w-full justify-between items-center ">
         <input
           type="range"
           min="-60"
@@ -137,12 +150,31 @@ const TrackUI: React.FC<TrackUIProps> = ({
           />
         )}
 
-        <button
-          className="p-1 bg-red-400 rounded-full text-xs justify-self-end"
-          onClick={() => removeTrack(trackIndex)}
-        >
-          X
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            className="px-1 bg-blue-400 rounded-full text-xs"
+            onClick={() => {
+              moveTrackUp(trackIndex);
+            }}
+          >
+            ^
+          </button>
+          <button
+            className="px-1 bg-blue-400 rounded-full text-xs rotate-180"
+            onClick={() => {
+              moveTrackDown(trackIndex);
+            }}
+          >
+            ^
+          </button>
+
+          <button
+            className="px-1 bg-red-400 rounded-full text-xs"
+            onClick={() => removeTrack(trackIndex)}
+          >
+            X
+          </button>
+        </div>
       </div>
     </div>
   );
