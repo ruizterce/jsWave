@@ -6,6 +6,7 @@ export class Track {
   private _name: string;
   private _instrument: InstrumentType;
   private _notes: Notes;
+  private _noteDuration: number | string;
   private _sequence: Tone.Sequence;
   private _sampleUrl: string | undefined;
 
@@ -19,6 +20,7 @@ export class Track {
     this._sampleUrl = sampleUrl;
     this._instrument = this.createInstrument(instrumentType);
     this._notes = notes;
+    this._noteDuration = "16n";
     this._sequence = this.createSequence(notes);
     console.log(`Track "${name}" created`);
   }
@@ -34,6 +36,15 @@ export class Track {
   set notes(newNotes: Notes) {
     this._notes = newNotes;
     this.updateSequence(newNotes);
+  }
+
+  get noteDuration(): string | number {
+    return this._noteDuration;
+  }
+
+  set noteDuration(newNoteDuration: string | number) {
+    this._noteDuration = newNoteDuration;
+    this.updateSequence(this._notes);
   }
 
   get sequence(): Tone.Sequence {
@@ -85,7 +96,11 @@ export class Track {
   private createSequence(notes: Notes): Tone.Sequence {
     return new Tone.Sequence(
       (time, note) => {
-        this._instrument?.triggerAttackRelease(note as string, 0.1, time);
+        this._instrument?.triggerAttackRelease(
+          note as string,
+          this._noteDuration,
+          time
+        );
       },
       notes,
       "16n"

@@ -4,6 +4,7 @@ import { Timeline } from "../classes/timeline";
 import useContextMenu from "../hooks/useContextMenu";
 import ContextMenu from "./ContextMenu";
 import { KEYS } from "../models/keys";
+import { SUBDIVISIONS } from "../models/subdivisions";
 
 interface TrackUIProps {
   timeline: Timeline;
@@ -20,6 +21,9 @@ const TrackUI: React.FC<TrackUIProps> = ({
 }) => {
   const sequencer = timeline.sequencers[sequencerIndex];
   const track = sequencer.tracks[trackIndex];
+  const [noteDuration, setNoteDuration] = useState<string | number>(
+    track.noteDuration
+  );
   const [, forceUpdate] = useState({}); // Dummy state to trigger re-render
   const { contextMenu, openMenu, closeMenu, menuRef } = useContextMenu();
 
@@ -51,6 +55,12 @@ const TrackUI: React.FC<TrackUIProps> = ({
       alert("Error: Invalid context menu data.");
       closeMenu();
     }
+  };
+
+  const handleNoteDurationChange = (newNoteDuration: string | number) => {
+    track.noteDuration = newNoteDuration;
+    setNoteDuration(newNoteDuration);
+    timeline.rescheduleSequencer(sequencerIndex);
   };
 
   return (
@@ -90,19 +100,35 @@ const TrackUI: React.FC<TrackUIProps> = ({
         />
       )}
 
-      <div className="flex gap-4">
+      <div className="flex gap-4 w-full justify-between">
         <button
-          className="p-1 bg-red-400 rounded-full text-xs"
+          onClick={(e) => {
+            openMenu(e, { type: "subdivision", trackIndex });
+          }}
+          className="px-2 bg-secondary rounded"
+        >
+          {noteDuration}
+        </button>
+
+        <button
+          className="p-1 bg-red-400 rounded-full text-xs justify-self-end"
           onClick={() => removeTrack(trackIndex)}
         >
           X
         </button>
-        <label htmlFor={`note-duration-${trackIndex}`}>Note Duration:</label>
-        <input
-          type="number"
-          id={`note-duration-${trackIndex}`}
-          className="w-10"
-        />
+
+        {/* Context Menu for Subdivisions */}
+        {contextMenu.open && contextMenu.data?.type === "subdivision" && (
+          <ContextMenu
+            x={contextMenu.x}
+            y={contextMenu.y}
+            menuRef={menuRef}
+            items={SUBDIVISIONS.map((subdivision) => ({
+              label: subdivision,
+              onClick: () => handleNoteDurationChange(subdivision),
+            }))}
+          />
+        )}
       </div>
     </div>
   );
