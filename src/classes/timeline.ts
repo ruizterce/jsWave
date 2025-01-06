@@ -107,4 +107,20 @@ export class Timeline {
     this._sequencers[sequencerIndex].dispose();
     this._sequencers.splice(sequencerIndex, 1);
   }
+
+  moveSequencerUp(sequencerIndex: number): void {
+    if (sequencerIndex > 0) {
+      const temp = this._sequencers[sequencerIndex];
+      this._sequencers[sequencerIndex] = this._sequencers[sequencerIndex - 1];
+      this._sequencers[sequencerIndex - 1] = temp;
+    }
+  }
+
+  moveSequencerDown(sequencerIndex: number): void {
+    if (sequencerIndex < this.sequencers.length - 1) {
+      const temp = this._sequencers[sequencerIndex];
+      this._sequencers[sequencerIndex] = this._sequencers[sequencerIndex + 1];
+      this._sequencers[sequencerIndex + 1] = temp;
+    }
+  }
 }

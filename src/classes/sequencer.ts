@@ -19,6 +19,10 @@ export class Sequencer {
     return this._name;
   }
 
+  set name(newName: string) {
+    this._name = newName;
+  }
+
   get tracks(): Track[] {
     return this._tracks;
   }
