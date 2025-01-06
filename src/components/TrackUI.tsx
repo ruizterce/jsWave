@@ -24,6 +24,7 @@ const TrackUI: React.FC<TrackUIProps> = ({
   const [noteDuration, setNoteDuration] = useState<string | number>(
     track.noteDuration
   );
+  const [volume, setVolume] = useState(track.volume);
   const [, forceUpdate] = useState({}); // Dummy state to trigger re-render
   const { contextMenu, openMenu, closeMenu, menuRef } = useContextMenu();
 
@@ -55,6 +56,11 @@ const TrackUI: React.FC<TrackUIProps> = ({
       alert("Error: Invalid context menu data.");
       closeMenu();
     }
+  };
+
+  const handleVolumeChange = (newVolume: number) => {
+    track.volume = newVolume;
+    setVolume(newVolume);
   };
 
   const handleNoteDurationChange = (newNoteDuration: string | number) => {
@@ -100,7 +106,18 @@ const TrackUI: React.FC<TrackUIProps> = ({
         />
       )}
 
+      {/* Track Parameters */}
       <div className="flex gap-4 w-full justify-between">
+        <input
+          type="range"
+          min="-60"
+          max="0"
+          value={volume}
+          onChange={(e) => {
+            handleVolumeChange(parseInt(e.target.value));
+          }}
+        />
+
         <button
           onClick={(e) => {
             openMenu(e, { type: "subdivision", trackIndex });
@@ -108,13 +125,6 @@ const TrackUI: React.FC<TrackUIProps> = ({
           className="px-2 bg-secondary rounded"
         >
           {noteDuration}
-        </button>
-
-        <button
-          className="p-1 bg-red-400 rounded-full text-xs justify-self-end"
-          onClick={() => removeTrack(trackIndex)}
-        >
-          X
         </button>
 
         {/* Context Menu for Subdivisions */}
@@ -129,6 +139,13 @@ const TrackUI: React.FC<TrackUIProps> = ({
             }))}
           />
         )}
+
+        <button
+          className="p-1 bg-red-400 rounded-full text-xs justify-self-end"
+          onClick={() => removeTrack(trackIndex)}
+        >
+          X
+        </button>
       </div>
     </div>
   );

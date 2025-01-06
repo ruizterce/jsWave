@@ -51,6 +51,14 @@ export class Track {
     return this._sequence;
   }
 
+  get volume(): number {
+    return this._instrument.volume.value;
+  }
+
+  set volume(newVolume: number) {
+    this._instrument.volume.value = newVolume;
+  }
+
   startSequence(time: Time, startTime: number | undefined = 0): void {
     this._sequence.start(time, startTime);
   }
@@ -86,10 +94,10 @@ export class Track {
             baseUrl: "src/assets/samples/",
           }).toDestination();
         } else {
-          return null;
+          throw Error("Undefined Instrument");
         }
       default:
-        return null;
+        throw Error("Undefined Instrument");
     }
   }
 
@@ -110,5 +118,11 @@ export class Track {
   private updateSequence(notes: Notes): void {
     this._sequence.dispose();
     this._sequence = this.createSequence(notes);
+  }
+
+  private setVolume(volume: number): void {
+    if (this._instrument) {
+      this._instrument.volume.value = volume;
+    }
   }
 }
