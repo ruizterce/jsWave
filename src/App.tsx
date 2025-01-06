@@ -16,7 +16,7 @@ Tone.getTransport().loopEnd = "4:0:0";
 // Initialize sequencers
 
 const sequencers = [
-  new Sequencer("Sequencer 1", [
+  new Sequencer("Sequencer 1", 4, [
     new Track("synth1", "synth", [
       "C4",
       null,
@@ -55,7 +55,7 @@ const sequencers = [
     ]),
   ]),
 
-  new Sequencer("Sequencer 2", [
+  new Sequencer("Sequencer 2", 4, [
     new Track(
       "Hihat",
       "sampler",

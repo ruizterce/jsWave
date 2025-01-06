@@ -21,7 +21,7 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
   }, []);
 
   const handleBlockClick = (sequencerIndex: number, barIndex: number) => {
-    if (timeline.events[sequencerIndex][barIndex]) {
+    if (timeline.sequencers[sequencerIndex].events[barIndex]) {
       timeline.removeBlock(sequencerIndex, barIndex);
     } else {
       timeline.addBlock(sequencerIndex, barIndex);
@@ -49,18 +49,18 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
 
       {/* Timeline Blocks */}
       <div className="flex flex-col gap-2">
-        {timeline.events.map((sequencer, sequencerIndex) => {
+        {timeline.sequencers.map((sequencer, sequencerIndex) => {
           return (
             <div
               key={`timeline-sequencer-${sequencerIndex}`}
               className="flex gap-2"
             >
-              {sequencer.map((_e, barIndex) => {
+              {sequencer.events.map((_e, barIndex) => {
                 return (
                   <div
                     key={`timeline-bar-${barIndex}`}
                     className={`w-4 h-4 ${
-                      timeline.events[sequencerIndex][barIndex]
+                      timeline.sequencers[sequencerIndex].events[barIndex]
                         ? "bg-primary text-primaryContrast"
                         : "bg-primaryContrast text-primary"
                     }`}

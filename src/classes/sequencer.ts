@@ -6,11 +6,13 @@ export class Sequencer {
   private _name: string;
   private _tracks: Track[];
   private isPlaying: boolean;
+  private _events: boolean[];
 
-  constructor(name: string, tracks: Track[]) {
+  constructor(name: string, length: number, tracks: Track[]) {
     this._name = name;
     this.isPlaying = false;
     this._tracks = tracks;
+    this._events = Array.from({ length }, () => false);
   }
 
   get name(): string {
@@ -19,6 +21,14 @@ export class Sequencer {
 
   get tracks(): Track[] {
     return this._tracks;
+  }
+
+  get events(): boolean[] {
+    return this._events;
+  }
+
+  set events(newEvents: boolean[]) {
+    this._events = newEvents;
   }
 
   start(time: Time, startTime: number | undefined): void {
@@ -63,29 +73,7 @@ export class Sequencer {
 
   addTrack(name: string, instrumentType: string, sampleUrl?: string): void {
     this._tracks.push(
-      new Track(
-        name,
-        instrumentType,
-        [
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-        ],
-        sampleUrl
-      )
+      new Track(name, instrumentType, Array(16).fill(null) as Notes, sampleUrl)
     );
   }
 

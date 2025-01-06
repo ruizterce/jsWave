@@ -119,10 +119,4 @@ export class Track {
     this._sequence.dispose();
     this._sequence = this.createSequence(notes);
   }
-
-  private setVolume(volume: number): void {
-    if (this._instrument) {
-      this._instrument.volume.value = volume;
-    }
-  }
 }
