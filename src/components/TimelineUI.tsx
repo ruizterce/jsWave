@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import * as Tone from "tone";
 import { Timeline } from "../classes/timeline";
+import { Sequencer } from "../classes/sequencer";
+import SequencerUI from "./SequencerUI";
 
 interface TimelineUIProps {
   timeline: Timeline;
@@ -24,14 +26,13 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
     } else {
       timeline.addBlock(sequencerIndex, barIndex);
     }
-
     forceUpdate({});
   };
 
   const activeBlock = Math.floor(progress * timeline.length);
 
   return (
-    <div>
+    <div className="flex flex-col gap-2 items-center">
       {/* Progress Tracker */}
       <div className="flex gap-2 mb-4">
         {Array.from({ length: timeline.length }, (_, index) => (
@@ -73,6 +74,39 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
           );
         })}
       </div>
+
+      <button
+        className="m-2 p-2 bg-secondary rounded"
+        onClick={() => {
+          timeline.addSequencer(`Sequencer-${timeline.sequencers.length + 1}`);
+          forceUpdate({});
+        }}
+      >
+        Add Sequencer
+      </button>
+
+      {/* Sequencer */}
+      {timeline.sequencers.map((sequencer: Sequencer, sequencerIndex) => {
+        if (sequencer) {
+          return (
+            <div key={`SequencerUI-${sequencerIndex}`}>
+              <SequencerUI
+                timeline={timeline}
+                sequencerIndex={sequencerIndex}
+              />
+              <button
+                className="p-1 bg-red-400 rounded-full text-xs"
+                onClick={() => {
+                  timeline.removeSequencer(sequencerIndex);
+                  forceUpdate({});
+                }}
+              >
+                X
+              </button>
+            </div>
+          );
+        }
+      })}
     </div>
   );
 };

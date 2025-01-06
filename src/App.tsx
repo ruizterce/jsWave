@@ -1,11 +1,10 @@
 import * as Tone from "tone";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "./store/store";
 import PlayMenu from "./components/PlayMenu";
 import { Sequencer } from "./classes/sequencer";
 import { Track } from "./classes/track";
-import SequencerUI from "./components/SequencerUI";
 import { Timeline } from "./classes/timeline";
 import TimelineUI from "./components/TimelineUI";
 
@@ -20,7 +19,7 @@ const sequencers = [
   new Sequencer("Sequencer 1", [
     new Track("synth1", "synth", [
       "C4",
-      ["E4", "D4", "E4"],
+      null,
       "G4",
       "A4",
       null,
@@ -137,8 +136,6 @@ timeline.addBlock(0, 0);
 
 const App = () => {
   const isPlaying = useSelector((state: RootState) => state.isPlaying.value);
-  const [, forceUpdate] = useState({}); // Dummy state to trigger re-render
-
   // Control transport
   useEffect(() => {
     if (isPlaying) {
@@ -156,38 +153,6 @@ const App = () => {
     <div className="max-w-lg m-auto p-2 flex flex-col gap-4 items-center">
       <PlayMenu />
       {timeline ? <TimelineUI timeline={timeline} /> : "No timeline"}
-
-      <button
-        className="m-2 p-2 bg-secondary rounded"
-        onClick={() => {
-          timeline.addSequencer(`Sequencer-${timeline.sequencers.length + 1}`);
-          forceUpdate({});
-        }}
-      >
-        Add Sequencer
-      </button>
-
-      {timeline.sequencers.map((sequencer: Sequencer, sequencerIndex) => {
-        if (sequencer) {
-          return (
-            <div key={`SequencerUI-${sequencerIndex}`}>
-              <SequencerUI
-                timeline={timeline}
-                sequencerIndex={sequencerIndex}
-              />
-              <button
-                className="p-1 bg-red-400 rounded-full text-xs"
-                onClick={() => {
-                  timeline.removeSequencer(sequencerIndex);
-                  forceUpdate({});
-                }}
-              >
-                X
-              </button>
-            </div>
-          );
-        }
-      })}
     </div>
   );
 };
