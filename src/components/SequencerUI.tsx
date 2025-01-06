@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Timeline } from "./timeline";
+import { Timeline } from "../classes/timeline";
 
 interface SequencerUIProps {
   timeline: Timeline;

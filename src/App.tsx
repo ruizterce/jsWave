@@ -2,17 +2,12 @@ import * as Tone from "tone";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "./store/store";
-import PlayMenu from "./PlayMenu";
-import { Sequencer } from "./sequencer";
-import { Track } from "./track";
-import SequencerUI from "./SequencerUI";
-import { Timeline } from "./timeline";
-import TimelineUI from "./TimelineUI";
-
-// Debugging transport position
-/* setInterval(() => {
-  console.log(Tone.getTransport().position);
-}, 1000); */
+import PlayMenu from "./components/PlayMenu";
+import { Sequencer } from "./classes/sequencer";
+import { Track } from "./classes/track";
+import SequencerUI from "./components/SequencerUI";
+import { Timeline } from "./classes/timeline";
+import TimelineUI from "./components/TimelineUI";
 
 Tone.getTransport().bpm.value = 120;
 Tone.getTransport().loop = true;

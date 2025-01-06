@@ -1,5 +1,5 @@
 import * as Tone from "tone";
-import { InstrumentType, Notes } from "./types";
+import { InstrumentType, Notes } from "../types";
 import { Time } from "tone/build/esm/core/type/Units";
 
 export class Track {

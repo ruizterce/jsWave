@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import * as Tone from "tone";
-import { Timeline } from "./timeline";
+import { Timeline } from "../classes/timeline";
 
 interface TimelineUIProps {
   timeline: Timeline;

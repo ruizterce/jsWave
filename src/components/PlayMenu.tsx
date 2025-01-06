@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "./store/store";
-import { play, stop } from "./store/isPlayingSlice";
+import { RootState } from "../store/store";
+import { play, stop } from "../store/isPlayingSlice";
 
 const PlayMenu = () => {
   const isPlaying = useSelector((state: RootState) => state.isPlaying.value);

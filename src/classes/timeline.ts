@@ -1,6 +1,6 @@
 import { Sequencer } from "./sequencer";
 import { Track } from "./track";
-import { Notes } from "./types";
+import { Notes } from "../types";
 
 export class Timeline {
   private _length: number;

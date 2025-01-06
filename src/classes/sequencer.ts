@@ -1,6 +1,6 @@
 import { Time } from "tone/build/esm/core/type/Units";
 import { Track } from "./track";
-import { Notes } from "./types";
+import { Notes } from "../types";
 
 export class Sequencer {
   private _name: string;
