@@ -45,7 +45,8 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
   const activeBlock = Math.floor(progress * timeline.length);
 
   return (
-    <div className="flex flex-col gap-2 items-center w-full">
+    <div className="flex flex-col gap-2 items-center">
+      {/* Timeline Controls */}
       <div className="flex gap-2">
         <button
           onClick={handlePlay}
@@ -108,63 +109,32 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
           }}
         />
       </div>
-      <div className="grid grid-cols-[max-content,1fr,max-content] gap-x-4 items-center">
+      <div className="grid grid-cols-[max-content,1fr] gap-x-4 items-center self-start">
         {/* Progress Tracker */}
         <div></div>
-        <div className="flex gap-2 mb-4 justify-center">
+        <div className="flex gap-2 mb-1 justify-center">
           {Array.from({ length: timeline.length }, (_, index) => (
             <div
               key={`progress-square-${index}`}
-              className={`w-4 h-4 rounded-full ${
+              className={`w-4 h-4 rounded-full cursor-pointer ${
                 index === activeBlock
                   ? "bg-primary text-primaryContrast"
-                  : "bg-gray-200"
+                  : "bg-gray-200 hover:bg-primary hover:brightness-150"
               }`}
               onClick={() => {
                 Tone.getTransport().position = index + ":0:0";
-                console.log(Tone.getTransport().position);
               }}
             ></div>
           ))}
         </div>
-        <div></div>
 
-        {/* Timeline Sequencers and Blocks */}
-
+        {/* Timeline Sequencers*/}
         {timeline.sequencers.map((sequencer, sequencerIndex) => {
           return (
             <React.Fragment key={`sequencer-${sequencerIndex}`}>
               {/* Sequencer Name */}
-              <input
-                className="max-w-36 justify-self-end"
-                value={sequencer.name}
-                onChange={(e) => {
-                  sequencer.name = e.target.value;
-                  forceUpdate({});
-                }}
-              />
-
-              {/* Sequencer Blocks */}
-              <div className="flex gap-2 justify-center">
-                {sequencer.events.map((_e, barIndex) => {
-                  return (
-                    <div
-                      key={`bar-${barIndex}`}
-                      className={`w-4 h-4 ${
-                        timeline.sequencers[sequencerIndex].events[barIndex]
-                          ? "bg-primary text-primaryContrast"
-                          : "bg-primaryContrast text-primary"
-                      }`}
-                      onClick={() => {
-                        handleBlockClick(sequencerIndex, barIndex);
-                      }}
-                    ></div>
-                  );
-                })}
-              </div>
-
-              {/* Sequencer Controls */}
-              <div className="flex gap-2">
+              <div className="flex gap-2 items-center">
+                <button className="w-36">{sequencer.name}</button>
                 <button
                   className="px-1 bg-blue-400 rounded-full text-xs"
                   onClick={() => {
@@ -193,6 +163,27 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
                   X
                 </button>
               </div>
+
+              {/* Sequencer Blocks */}
+              <div className="flex gap-1 justify-center">
+                {sequencer.events.map((_e, barIndex) => {
+                  return (
+                    <div
+                      key={`bar-${barIndex}`}
+                      className={`w-5 h-5 cursor-pointer rounded ${
+                        timeline.sequencers[sequencerIndex].events[barIndex]
+                          ? "bg-primary text-primaryContrast hover:bg-gray-500"
+                          : "bg-primaryContrast text-primary hover:bg-primary hover:opacity-50"
+                      }`}
+                      onClick={() => {
+                        handleBlockClick(sequencerIndex, barIndex);
+                      }}
+                    ></div>
+                  );
+                })}
+              </div>
+
+              {/* Sequencer Controls */}
             </React.Fragment>
           );
         })}
@@ -218,6 +209,9 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
               <SequencerUI
                 timeline={timeline}
                 sequencerIndex={sequencerIndex}
+                forceUpdateParent={() => {
+                  forceUpdate({});
+                }}
               />
             </div>
           );

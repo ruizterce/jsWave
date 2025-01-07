@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import * as Tone from "tone";
 import { Timeline } from "../classes/timeline";
 import useContextMenu from "../hooks/useContextMenu";
 import ContextMenu from "../components/ContextMenu";
@@ -7,11 +8,13 @@ import TrackUI from "./TrackUI";
 interface SequencerUIProps {
   timeline: Timeline;
   sequencerIndex: number;
+  forceUpdateParent: () => void;
 }
 
 const SequencerUI: React.FC<SequencerUIProps> = ({
   timeline,
   sequencerIndex,
+  forceUpdateParent,
 }) => {
   const sequencer = timeline.sequencers[sequencerIndex];
   const [progress, setProgress] = useState(0);
@@ -31,6 +34,15 @@ const SequencerUI: React.FC<SequencerUIProps> = ({
     return () => clearInterval(interval);
   }, [sequencerIndex, timeline.sequencers]);
 
+  const handleProgressClick = (index: number) => {
+    const position = Tone.getTransport().position as string;
+    const parts = position.split(":");
+    const bar = parts[0];
+    const quarter = Math.floor(index / 4);
+    const sixteenth = index % 4;
+    Tone.getTransport().position = bar + ":" + quarter + ":" + sixteenth;
+  };
+
   // Handle sampler context menu
   const handleAddSamplerClick = (samplePath: string) => {
     sequencer.addTrack(
@@ -46,13 +58,21 @@ const SequencerUI: React.FC<SequencerUIProps> = ({
 
   const notesLength =
     timeline.sequencers[sequencerIndex].tracks[0]?.notes.length || 16;
-  const activeBlock = Math.floor(progress * notesLength);
+  const activeBlock = progress ? Math.floor(progress * notesLength) : null;
 
   return (
-    <div className="p-4 bg-stone-300 rounded">
-      <div className="text-center">{sequencer.name}</div>
+    <div className="p-4 bg-stone-300 rounded flex flex-col gap-1 items-center">
+      <input
+        className="max-w-36 px-2 text-center rounded-full"
+        value={sequencer.name}
+        onChange={(e) => {
+          sequencer.name = e.target.value;
+          forceUpdateParent();
+        }}
+        maxLength={12}
+      />
       {/* Progress Tracker */}
-      <div className="flex gap-2 p-2 bg-stone-100 rounded">
+      <div className="flex gap-2 bg-stone-100 rounded-t-2xl rounded-b px-2">
         {Array.from(
           {
             length: notesLength,
@@ -60,11 +80,14 @@ const SequencerUI: React.FC<SequencerUIProps> = ({
           (_, index) => (
             <div
               key={`progress-square-${index}`}
-              className={`w-4 h-4 m-2 rounded-full ${
+              className={`w-4 h-4 mx-2 my-1 rounded-full cursor-pointer  ${
                 index === activeBlock
                   ? "bg-primary text-primaryContrast"
-                  : "bg-gray-200"
+                  : "bg-gray-200 hover:bg-primary hover:brightness-150"
               }`}
+              onClick={() => {
+                handleProgressClick(index);
+              }}
             ></div>
           )
         )}
@@ -92,56 +115,58 @@ const SequencerUI: React.FC<SequencerUIProps> = ({
       ))}
 
       {/* Add Buttons*/}
-      <button
-        className="m-2 p-2 bg-secondary rounded hover:bg-gray-50"
-        onClick={() => {
-          sequencer.addTrack(`Synth-${sequencer.tracks.length + 1}`, "synth");
-          forceUpdate({});
-        }}
-      >
-        Add Synth
-      </button>
-
-      <div className="relative inline-block text-left">
-        {/* Context Menu for Add Sampler  */}
-        <div
-          className="relative inline-block text-left"
-          onClick={(e) => {
-            openMenu(e, {
-              type: "sampler",
-              trackIndex: 0,
-            });
+      <div className="self-start my-2 flex gap-2">
+        <button
+          className=" p-2 bg-secondary rounded text-sm hover:bg-gray-50"
+          onClick={() => {
+            sequencer.addTrack(`Synth-${sequencer.tracks.length + 1}`, "synth");
+            forceUpdate({});
           }}
         >
-          <button
-            type="button"
-            className="m-2 p-2 bg-secondary rounded hover:bg-gray-50"
-          >
-            Add Sampler
-          </button>
-        </div>
+          + Synth
+        </button>
 
-        {contextMenu.open && contextMenu.data?.type === "sampler" && (
-          <ContextMenu
-            x={contextMenu.x}
-            y={contextMenu.y}
-            menuRef={menuRef}
-            items={[
-              {
-                label: "Kick",
-                onClick: () => handleAddSamplerClick("TR-808/Kick-Long.mp3"),
-              },
-              {
-                label: "Snare",
-                onClick: () => handleAddSamplerClick("TR-808/Snare-Mid.mp3"),
-              },
-              {
-                label: "Hihat",
-                onClick: () => handleAddSamplerClick("TR-808/Hihat.mp3"),
-              },
-            ]}
-          />
-        )}
+        <div className="relative inline-block text-left">
+          {/* Context Menu for Add Sampler  */}
+          <div
+            className="relative inline-block text-left"
+            onClick={(e) => {
+              openMenu(e, {
+                type: "sampler",
+                trackIndex: 0,
+              });
+            }}
+          >
+            <button
+              type="button"
+              className="p-2 bg-secondary rounded text-sm hover:bg-gray-50"
+            >
+              + Sampler
+            </button>
+          </div>
+
+          {contextMenu.open && contextMenu.data?.type === "sampler" && (
+            <ContextMenu
+              x={contextMenu.x}
+              y={contextMenu.y}
+              menuRef={menuRef}
+              items={[
+                {
+                  label: "Kick",
+                  onClick: () => handleAddSamplerClick("TR-808/Kick-Long.mp3"),
+                },
+                {
+                  label: "Snare",
+                  onClick: () => handleAddSamplerClick("TR-808/Snare-Mid.mp3"),
+                },
+                {
+                  label: "Hihat",
+                  onClick: () => handleAddSamplerClick("TR-808/Hihat.mp3"),
+                },
+              ]}
+            />
+          )}
+        </div>
       </div>
     </div>
   );
