@@ -21,6 +21,18 @@ export class Sequencer {
     this._name = newName;
   }
 
+  set length(newLength: number) {
+    if (newLength > this._events.length) {
+      const newEvents = this._events.concat(
+        Array(newLength - this._events.length).fill(false)
+      );
+      this._events = newEvents;
+    } else {
+      const newEvents = this._events.slice(0, newLength);
+      this._events = newEvents;
+    }
+  }
+
   get tracks(): Track[] {
     return this._tracks;
   }

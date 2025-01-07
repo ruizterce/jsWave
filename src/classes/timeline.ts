@@ -1,6 +1,12 @@
+import * as Tone from "tone";
 import { Sequencer } from "./sequencer";
 import { Track } from "./track";
 import { Notes } from "../types";
+
+Tone.getTransport().bpm.value = 120;
+Tone.getTransport().loop = true;
+Tone.getTransport().loopStart = "0:0:0";
+Tone.getTransport().loopEnd = "4:0:0";
 
 export class Timeline {
   private _length: number;
@@ -13,6 +19,14 @@ export class Timeline {
 
   get length(): number {
     return this._length;
+  }
+
+  set length(newLength: number) {
+    this._length = newLength;
+    this.sequencers.forEach((sequencer) => {
+      sequencer.length = newLength;
+    });
+    Tone.getTransport().loopEnd = newLength + ":0:0";
   }
 
   get sequencers(): Sequencer[] {

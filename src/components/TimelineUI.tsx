@@ -21,6 +21,18 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
     return () => clearInterval(interval);
   }, []);
 
+  const handlePlay = () => {
+    Tone.getTransport().start();
+  };
+
+  const handlePause = () => {
+    Tone.getTransport().pause();
+  };
+
+  const handleStop = () => {
+    Tone.getTransport().stop();
+  };
+
   const handleBlockClick = (sequencerIndex: number, barIndex: number) => {
     if (timeline.sequencers[sequencerIndex].events[barIndex]) {
       timeline.removeBlock(sequencerIndex, barIndex);
@@ -33,10 +45,73 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
   const activeBlock = Math.floor(progress * timeline.length);
 
   return (
-    <div className="flex flex-col gap-2 items-center ">
-      <div className="grid grid-cols-3 gap-x-4 items-center">
+    <div className="flex flex-col gap-2 items-center w-full">
+      <div className="flex gap-2">
+        <button
+          onClick={handlePlay}
+          disabled={Tone.getTransport().state === "started"}
+          className={`p-2 rounded ${
+            Tone.getTransport().state !== "started"
+              ? "bg-primary text-primaryContrast"
+              : "bg-primaryContrast text-primary shadow-xl"
+          }`}
+        >
+          Play
+        </button>
+        <button
+          onClick={handlePause}
+          disabled={Tone.getTransport().state !== "started"}
+          className={`p-2 rounded ${
+            Tone.getTransport().state !== "started"
+              ? "bg-primaryContrast text-primary "
+              : "bg-primary text-primaryContrast"
+          }`}
+        >
+          Pause
+        </button>
+        <button
+          onClick={handleStop}
+          disabled={Tone.getTransport().state === "stopped"}
+          className={`p-2 rounded ${
+            Tone.getTransport().state === "stopped"
+              ? "bg-primaryContrast text-primary "
+              : "bg-primary text-primaryContrast"
+          }`}
+        >
+          Stop
+        </button>
+      </div>
+      <div
+        className="flex gap-2
+      "
+      >
+        <label htmlFor="timeline-length">BPM: </label>
+        <input
+          type="number"
+          id="timeline-length"
+          className="w-12"
+          value={Tone.getTransport().bpm.value}
+          onChange={(e) => {
+            Tone.getTransport().bpm.value = parseInt(e.target.value);
+            forceUpdate({});
+          }}
+        />
+        <label htmlFor="timeline-length">Timeline Length: </label>
+        <input
+          type="number"
+          id="timeline-length"
+          className="w-12"
+          value={timeline.length}
+          onChange={(e) => {
+            timeline.length = parseInt(e.target.value);
+            forceUpdate({});
+          }}
+        />
+      </div>
+      <div className="grid grid-cols-[max-content,1fr,max-content] gap-x-4 items-center">
         {/* Progress Tracker */}
-        <div className="flex gap-2 mb-4 col-span-3 justify-center">
+        <div></div>
+        <div className="flex gap-2 mb-4 justify-center">
           {Array.from({ length: timeline.length }, (_, index) => (
             <div
               key={`progress-square-${index}`}
@@ -45,9 +120,14 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
                   ? "bg-primary text-primaryContrast"
                   : "bg-gray-200"
               }`}
+              onClick={() => {
+                Tone.getTransport().position = index + ":0:0";
+                console.log(Tone.getTransport().position);
+              }}
             ></div>
           ))}
         </div>
+        <div></div>
 
         {/* Timeline Sequencers and Blocks */}
 
@@ -56,7 +136,7 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
             <React.Fragment key={`sequencer-${sequencerIndex}`}>
               {/* Sequencer Name */}
               <input
-                className=""
+                className="max-w-36 justify-self-end"
                 value={sequencer.name}
                 onChange={(e) => {
                   sequencer.name = e.target.value;
@@ -118,7 +198,7 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
         })}
 
         <button
-          className="bg-secondary rounded"
+          className="max-w-36 bg-secondary rounded"
           onClick={() => {
             timeline.addSequencer(
               `Sequencer-${timeline.sequencers.length + 1}`

@@ -1,8 +1,4 @@
 import * as Tone from "tone";
-import { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "./store/store";
-import PlayMenu from "./components/PlayMenu";
 import { Sequencer } from "./classes/sequencer";
 import { Track } from "./classes/track";
 import { Timeline } from "./classes/timeline";
@@ -135,23 +131,8 @@ const timeline = new Timeline(TIMELINE_LENGHT, sequencers);
 timeline.addBlock(0, 0);
 
 const App = () => {
-  const isPlaying = useSelector((state: RootState) => state.isPlaying.value);
-  // Control transport
-  useEffect(() => {
-    if (isPlaying) {
-      Tone.getTransport().start();
-    } else {
-      console.log("cancel");
-      Tone.getTransport().stop();
-    }
-    return () => {
-      Tone.getTransport().stop();
-    };
-  }, [isPlaying]);
-
   return (
-    <div className="max-w-lg m-auto p-2 flex flex-col gap-4 items-center">
-      <PlayMenu />
+    <div className="m-auto p-2 flex flex-col gap-4 items-center">
       {timeline ? <TimelineUI timeline={timeline} /> : "No timeline"}
     </div>
   );
