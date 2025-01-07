@@ -61,9 +61,10 @@ const SequencerUI: React.FC<SequencerUIProps> = ({
   const activeBlock = progress ? Math.floor(progress * notesLength) : null;
 
   return (
-    <div className="p-4 bg-stone-300 rounded flex flex-col gap-1 items-center">
+    <div className="p-4 bg-stone-300 rounded flex flex-col gap-1 max-h-full overflow-auto">
       <input
         className="max-w-36 px-2 text-center rounded-full"
+        id={"sequencer-" + sequencerIndex + "-name"}
         value={sequencer.name}
         onChange={(e) => {
           sequencer.name = e.target.value;
@@ -71,26 +72,30 @@ const SequencerUI: React.FC<SequencerUIProps> = ({
         }}
         maxLength={12}
       />
-      {/* Progress Tracker */}
-      <div className="flex gap-2 bg-stone-100 rounded-t-2xl rounded-b px-2">
-        {Array.from(
-          {
-            length: notesLength,
-          },
-          (_, index) => (
-            <div
-              key={`progress-square-${index}`}
-              className={`w-4 h-4 mx-2 my-1 rounded-full cursor-pointer  ${
-                index === activeBlock
-                  ? "bg-primary text-primaryContrast"
-                  : "bg-gray-200 hover:bg-primary hover:brightness-150"
-              }`}
-              onClick={() => {
-                handleProgressClick(index);
-              }}
-            ></div>
-          )
-        )}
+
+      <div className="flex">
+        <div className="w-[250px]"></div>
+        {/* Progress Tracker */}
+        <div className="flex gap-6 bg-stone-100 rounded-t-2xl rounded-b px-4">
+          {Array.from(
+            {
+              length: notesLength,
+            },
+            (_, index) => (
+              <div
+                key={`progress-square-${index}`}
+                className={`w-4 h-4 mx-2 my-1  rounded-full cursor-pointer  ${
+                  index === activeBlock
+                    ? "bg-primary text-primaryContrast"
+                    : "bg-gray-200 hover:bg-primary hover:brightness-150"
+                }`}
+                onClick={() => {
+                  handleProgressClick(index);
+                }}
+              ></div>
+            )
+          )}
+        </div>
       </div>
       {/* Sequencer Tracks */}
       {sequencer.tracks.map((track, trackIndex) => (

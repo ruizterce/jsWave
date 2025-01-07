@@ -132,7 +132,7 @@ timeline.addBlock(0, 0);
 
 const App = () => {
   return (
-    <div className="m-auto p-2 flex flex-col gap-4 items-center">
+    <div className="p-2 flex flex-col gap-4 items-center h-screen w-full overflow-auto">
       {timeline ? <TimelineUI timeline={timeline} /> : "No timeline"}
     </div>
   );

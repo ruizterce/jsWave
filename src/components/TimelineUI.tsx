@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import * as Tone from "tone";
 import { Timeline } from "../classes/timeline";
-import { Sequencer } from "../classes/sequencer";
 import SequencerUI from "./SequencerUI";
 import React from "react";
 
@@ -10,6 +9,7 @@ interface TimelineUIProps {
 }
 const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
   const [progress, setProgress] = useState(0);
+  const [selectedSequencerIndex, setselectedSequencerIndex] = useState(0);
   const [, forceUpdate] = useState({}); // Dummy state to trigger re-render
 
   // Update progress
@@ -45,9 +45,22 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
   const activeBlock = Math.floor(progress * timeline.length);
 
   return (
-    <div className="flex flex-col gap-2 items-center">
+    <div className="relative flex flex-col gap-2 items-center h-full">
       {/* Timeline Controls */}
-      <div className="flex gap-2">
+      <div className="absolute left-0 top-2">
+        <label htmlFor="timeline-bpm">BPM: </label>
+        <input
+          type="number"
+          id="timeline-bpm"
+          className="w-12"
+          value={Tone.getTransport().bpm.value}
+          onChange={(e) => {
+            Tone.getTransport().bpm.value = parseInt(e.target.value);
+            forceUpdate({});
+          }}
+        />
+      </div>
+      <div className="flex gap-2 w-full justify-center items-center">
         <button
           onClick={handlePlay}
           disabled={Tone.getTransport().state === "started"}
@@ -82,63 +95,64 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
           Stop
         </button>
       </div>
-      <div
-        className="flex gap-2
-      "
-      >
-        <label htmlFor="timeline-length">BPM: </label>
-        <input
-          type="number"
-          id="timeline-length"
-          className="w-12"
-          value={Tone.getTransport().bpm.value}
-          onChange={(e) => {
-            Tone.getTransport().bpm.value = parseInt(e.target.value);
-            forceUpdate({});
-          }}
-        />
-        <label htmlFor="timeline-length">Timeline Length: </label>
-        <input
-          type="number"
-          id="timeline-length"
-          className="w-12"
-          value={timeline.length}
-          onChange={(e) => {
-            timeline.length = parseInt(e.target.value);
-            forceUpdate({});
-          }}
-        />
-      </div>
-      <div className="grid grid-cols-[max-content,1fr] gap-x-4 items-center self-start">
-        {/* Progress Tracker */}
-        <div></div>
-        <div className="flex gap-2 mb-1 justify-center">
-          {Array.from({ length: timeline.length }, (_, index) => (
-            <div
-              key={`progress-square-${index}`}
-              className={`w-4 h-4 rounded-full cursor-pointer ${
-                index === activeBlock
-                  ? "bg-primary text-primaryContrast"
-                  : "bg-gray-200 hover:bg-primary hover:brightness-150"
-              }`}
+
+      {/* Progress Tracker */}
+      <div className="items-center self-start">
+        <div className="flex">
+          <div className="w-60 flex justify-end gap-1">
+            <button
               onClick={() => {
-                Tone.getTransport().position = index + ":0:0";
+                timeline.length -= 1;
+                forceUpdate({});
               }}
-            ></div>
-          ))}
+              className="w-5 h-5 bg-red-300 rounded-full leading-4"
+            >
+              -
+            </button>
+            <button
+              onClick={() => {
+                timeline.length += 1;
+                forceUpdate({});
+              }}
+              className="w-5 h-5 bg-green-300 rounded-full leading-4"
+            >
+              +
+            </button>
+          </div>
+          <div className="flex px-2 gap-1 mb-1 justify-center">
+            {Array.from({ length: timeline.length }, (_, index) => (
+              <div
+                key={`progress-square-${index}`}
+                className={`w-5 h-5 rounded-full cursor-pointer ${
+                  index === activeBlock
+                    ? "bg-primary text-primaryContrast"
+                    : "bg-gray-200 hover:bg-primary hover:brightness-150"
+                }`}
+                onClick={() => {
+                  Tone.getTransport().position = index + ":0:0";
+                }}
+              ></div>
+            ))}
+          </div>
         </div>
 
         {/* Timeline Sequencers*/}
         {timeline.sequencers.map((sequencer, sequencerIndex) => {
           return (
-            <React.Fragment key={`sequencer-${sequencerIndex}`}>
-              {/* Sequencer Name */}
-              <div className="flex gap-2 items-center">
-                <button className="w-36">{sequencer.name}</button>
+            <div className="flex" key={`sequencer-${sequencerIndex}`}>
+              {/* Sequencer Controls */}
+              <div
+                className={`w-60 flex gap-2 items-center rounded ${
+                  selectedSequencerIndex === sequencerIndex ? "bg-primary" : ""
+                }`}
+              >
                 <button
                   className="px-1 bg-blue-400 rounded-full text-xs"
                   onClick={() => {
                     timeline.moveSequencerUp(sequencerIndex);
+                    if (selectedSequencerIndex > 0) {
+                      setselectedSequencerIndex(selectedSequencerIndex - 1);
+                    }
                     forceUpdate({});
                   }}
                 >
@@ -148,6 +162,12 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
                   className="px-1 bg-blue-400  rounded-full text-xs rotate-180"
                   onClick={() => {
                     timeline.moveSequencerDown(sequencerIndex);
+                    if (
+                      selectedSequencerIndex <
+                      timeline.sequencers.length - 1
+                    ) {
+                      setselectedSequencerIndex(selectedSequencerIndex + 1);
+                    }
                     forceUpdate({});
                   }}
                 >
@@ -162,10 +182,19 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
                 >
                   X
                 </button>
+
+                <button
+                  className="w-36"
+                  onClick={() => {
+                    setselectedSequencerIndex(sequencerIndex);
+                  }}
+                >
+                  {sequencer.name}
+                </button>
               </div>
 
               {/* Sequencer Blocks */}
-              <div className="flex gap-1 justify-center">
+              <div className="flex px-2 gap-1 justify-center">
                 {sequencer.events.map((_e, barIndex) => {
                   return (
                     <div
@@ -182,14 +211,12 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
                   );
                 })}
               </div>
-
-              {/* Sequencer Controls */}
-            </React.Fragment>
+            </div>
           );
         })}
 
         <button
-          className="max-w-36 bg-secondary rounded"
+          className="w-36 bg-secondary rounded"
           onClick={() => {
             timeline.addSequencer(
               `Sequencer-${timeline.sequencers.length + 1}`
@@ -202,21 +229,14 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
       </div>
 
       {/* Sequencer UI*/}
-      {timeline.sequencers.map((sequencer: Sequencer, sequencerIndex) => {
-        if (sequencer) {
-          return (
-            <div key={`SequencerUI-${sequencerIndex}`}>
-              <SequencerUI
-                timeline={timeline}
-                sequencerIndex={sequencerIndex}
-                forceUpdateParent={() => {
-                  forceUpdate({});
-                }}
-              />
-            </div>
-          );
-        }
-      })}
+
+      <SequencerUI
+        timeline={timeline}
+        sequencerIndex={selectedSequencerIndex}
+        forceUpdateParent={() => {
+          forceUpdate({});
+        }}
+      />
     </div>
   );
 };

@@ -72,21 +72,85 @@ const TrackUI: React.FC<TrackUIProps> = ({
   };
 
   return (
-    <div className="p-2 bg-stone-100 rounded flex flex-col gap-1 ">
-      <input
-        className="px-2 w-36 rounded-full"
-        value={track.name}
-        disabled={Tone.getTransport().state === "started"}
-        onChange={(e) => {
-          track.name = e.target.value;
-          forceUpdate({});
-        }}
-      />
+    <div className="p-2 bg-stone-100 rounded flex gap-2">
+      <div className="flex gap-2 w-60">
+        {/* Track Management*/}
+        <div className="flex flex-col items-center">
+          <button
+            className="px-1 w-4 bg-blue-400 rounded-t-full text-xs"
+            onClick={() => {
+              moveTrackUp(trackIndex);
+            }}
+          >
+            ^
+          </button>
+          <button
+            className="px-1 w-4 bg-red-400 text-xs"
+            onClick={() => removeTrack(trackIndex)}
+          >
+            X
+          </button>
+          <button
+            className="px-1 w-4 bg-blue-400 rounded-t-full text-xs rotate-180"
+            onClick={() => {
+              moveTrackDown(trackIndex);
+            }}
+          >
+            ^
+          </button>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <input
+            className="px-2 w-36 rounded-full"
+            id={"track-" + trackIndex + "-name"}
+            value={track.name}
+            disabled={Tone.getTransport().state === "started"}
+            onChange={(e) => {
+              track.name = e.target.value;
+              forceUpdate({});
+            }}
+          />
+
+          <input
+            type="range"
+            min="-60"
+            max="0"
+            value={track.volume}
+            onChange={(e) => {
+              handleVolumeChange(parseInt(e.target.value));
+            }}
+          />
+        </div>
+
+        <button
+          onClick={(e) => {
+            openMenu(e, { type: "subdivision", trackIndex });
+          }}
+          className="px-2 bg-secondary text-sm rounded"
+        >
+          {track.noteDuration}
+        </button>
+
+        {/* Context Menu for Subdivisions */}
+        {contextMenu.open && contextMenu.data?.type === "subdivision" && (
+          <ContextMenu
+            x={contextMenu.x}
+            y={contextMenu.y}
+            menuRef={menuRef}
+            items={SUBDIVISIONS.map((subdivision) => ({
+              label: subdivision,
+              onClick: () => handleNoteDurationChange(subdivision),
+            }))}
+          />
+        )}
+      </div>
+      {/* Notes */}
       <div className="flex gap-2">
         {track.notes.map((note: Note, noteIndex: number) => (
           <div
             key={noteIndex}
-            className={`h-8 w-8 rounded text-center cursor-pointer ${
+            className={`h-12 w-12 rounded text-center cursor-pointer ${
               noteIndex % 4 === 0 ? "brightness-125" : ""
             } ${
               note
@@ -101,82 +165,19 @@ const TrackUI: React.FC<TrackUIProps> = ({
             {note || noteIndex + 1}
           </div>
         ))}
-      </div>
 
-      {/* Context Menu for Notes */}
-      {contextMenu.open && contextMenu.data?.type === "note" && (
-        <ContextMenu
-          x={contextMenu.x}
-          y={contextMenu.y}
-          menuRef={menuRef}
-          items={KEYS.map((note) => ({
-            label: note,
-            onClick: () => handleNoteChange(note),
-          }))}
-        />
-      )}
-
-      {/* Track Controls */}
-      <div className="flex gap-4 w-full justify-between items-center ">
-        <div className="flex gap-4">
-          <input
-            type="range"
-            min="-60"
-            max="0"
-            value={track.volume}
-            onChange={(e) => {
-              handleVolumeChange(parseInt(e.target.value));
-            }}
+        {/* Context Menu for Notes */}
+        {contextMenu.open && contextMenu.data?.type === "note" && (
+          <ContextMenu
+            x={contextMenu.x}
+            y={contextMenu.y}
+            menuRef={menuRef}
+            items={KEYS.map((note) => ({
+              label: note,
+              onClick: () => handleNoteChange(note),
+            }))}
           />
-
-          <button
-            onClick={(e) => {
-              openMenu(e, { type: "subdivision", trackIndex });
-            }}
-            className="px-2 bg-secondary text-sm rounded"
-          >
-            {track.noteDuration}
-          </button>
-
-          {/* Context Menu for Subdivisions */}
-          {contextMenu.open && contextMenu.data?.type === "subdivision" && (
-            <ContextMenu
-              x={contextMenu.x}
-              y={contextMenu.y}
-              menuRef={menuRef}
-              items={SUBDIVISIONS.map((subdivision) => ({
-                label: subdivision,
-                onClick: () => handleNoteDurationChange(subdivision),
-              }))}
-            />
-          )}
-        </div>
-
-        <div className="flex items-center gap-2">
-          <button
-            className="px-1 bg-blue-400 rounded-full text-xs"
-            onClick={() => {
-              moveTrackUp(trackIndex);
-            }}
-          >
-            ^
-          </button>
-          <button
-            className="px-1 bg-blue-400 rounded-full text-xs rotate-180"
-            onClick={() => {
-              moveTrackDown(trackIndex);
-            }}
-          >
-            ^
-          </button>
-
-          <button
-            className="px-1 bg-red-400 rounded-full text-xs"
-            onClick={() => removeTrack(trackIndex)}
-          >
-            X
-          </button>
-        </div>
+        )}
       </div>
     </div>
   );
