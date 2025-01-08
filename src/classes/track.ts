@@ -1,10 +1,13 @@
 import * as Tone from "tone";
-import { InstrumentType, Notes } from "../types";
 import { Time } from "tone/build/esm/core/type/Units";
+
+type InstrumentType = Tone.Synth | Tone.Sampler;
+type Note = string | string[] | null;
+type Notes = Note[];
 
 export class Track {
   private _name: string;
-  private _instrument: InstrumentType;
+  instrument: InstrumentType;
   private _notes: Notes;
   private _noteDuration: number | string;
   private _sequence: Tone.Sequence;
@@ -18,7 +21,7 @@ export class Track {
   ) {
     this._name = name;
     this._sampleUrl = sampleUrl;
-    this._instrument = this.createInstrument(instrumentType);
+    this.instrument = this.createInstrument(instrumentType);
     this._notes = notes;
     this._noteDuration = "16n";
     this._sequence = this.createSequence(notes);
@@ -56,11 +59,11 @@ export class Track {
   }
 
   get volume(): number {
-    return this._instrument.volume.value;
+    return this.instrument.volume.value;
   }
 
   set volume(newVolume: number) {
-    this._instrument.volume.value = newVolume;
+    this.instrument.volume.value = newVolume;
   }
 
   startSequence(time: Time, startTime: number | undefined = 0): void {
@@ -80,7 +83,7 @@ export class Track {
 
   dispose(): void {
     this._sequence?.dispose();
-    this._instrument?.dispose();
+    this.instrument?.dispose();
   }
 
   private createInstrument(instrumentType: string): InstrumentType {
@@ -108,7 +111,7 @@ export class Track {
   private createSequence(notes: Notes): Tone.Sequence {
     return new Tone.Sequence(
       (time, note) => {
-        this._instrument?.triggerAttackRelease(
+        this.instrument?.triggerAttackRelease(
           note as string,
           this._noteDuration,
           time
