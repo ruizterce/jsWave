@@ -1,6 +1,7 @@
 import { useState } from "react";
 import * as Tone from "tone";
 import { Timeline } from "../classes/timeline";
+import AudioRecorder from "./AudioRecorder";
 
 interface TransportControlsProps {
   timeline: Timeline;
@@ -156,6 +157,7 @@ const TransportControls: React.FC<TransportControlsProps> = ({
         >
           Sequencer Loop
         </button>
+        <AudioRecorder handlePlay={handlePlay} />
       </div>
     </>
   );
