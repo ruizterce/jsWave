@@ -1,13 +1,7 @@
-import * as Tone from "tone";
 import { Sequencer } from "./classes/sequencer";
 import { Track } from "./classes/track";
 import { Timeline } from "./classes/timeline";
 import TimelineUI from "./components/TimelineUI";
-
-Tone.getTransport().bpm.value = 120;
-Tone.getTransport().loop = true;
-Tone.getTransport().loopStart = "0:0:0";
-Tone.getTransport().loopEnd = "4:0:0";
 
 // Initialize sequencers
 
