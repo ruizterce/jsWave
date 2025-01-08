@@ -4,23 +4,26 @@ import { Timeline } from "../classes/timeline";
 import SequencerUI from "./SequencerUI";
 import React from "react";
 import TransportControls from "./TransportControls";
+import { Time } from "tone/build/esm/core/type/Units";
 
 interface TimelineUIProps {
   timeline: Timeline;
 }
 const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
-  const [progress, setProgress] = useState(0);
+  const [position, setPosition] = useState<Time>();
   const [selectedSequencerIndex, setselectedSequencerIndex] = useState(0);
+  const [isSequencerLoop, setIsSequencerLoop] = useState(false);
+
   const [, forceUpdate] = useState({}); // Dummy state to trigger re-render
 
-  // Update progress
+  // Update position
   useEffect(() => {
     const interval = setInterval(() => {
-      setProgress(Tone.getTransport().progress);
-    }, 100);
+      setPosition(Tone.getTransport().position);
+    }, 200);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [position]);
 
   const handleBlockClick = (sequencerIndex: number, barIndex: number) => {
     if (timeline.sequencers[sequencerIndex].events[barIndex]) {
@@ -31,13 +34,22 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
     forceUpdate({});
   };
 
-  const activeBlock = Math.floor(progress * timeline.length);
+  // eslint-disable-next-line @typescript-eslint/no-base-to-string
+  const activeBlock = position ? Number(position.toString().split(":")[0]) : 0;
 
   return (
     <div className="relative flex flex-col gap-2 items-center h-full bg-light rounded-3xl p-8 shadow-xl">
-      <TransportControls />
+      <TransportControls
+        timeline={timeline}
+        selectedSequencerIndex={selectedSequencerIndex}
+        isSequencerLoop={isSequencerLoop}
+        setIsSequencerLoop={setIsSequencerLoop}
+      />
       {/* Progress Tracker */}
-      <div className="items-center self-start bg-lightMedium rounded-2xl p-4 w-full">
+      <div className="relative items-center self-start bg-lightMedium rounded-2xl p-4 w-full">
+        {isSequencerLoop && (
+          <div className="absolute z-10 w-full h-full bg-red-500 opacity-10 rounded-2xl -translate-x-4 -translate-y-4 bg-[repeating-linear-gradient(45deg,#f06c6c_0px,#f06c6c_10px,transparent_0%,transparent_50%)] bg-[length:64px_64px]"></div>
+        )}
         <div className="flex">
           <div className="w-60 flex justify-end gap-1">
             <button

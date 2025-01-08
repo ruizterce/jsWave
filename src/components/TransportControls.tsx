@@ -1,16 +1,33 @@
 import { useState } from "react";
 import * as Tone from "tone";
+import { Timeline } from "../classes/timeline";
 
+interface TransportControlsProps {
+  timeline: Timeline;
+  selectedSequencerIndex: number;
+  isSequencerLoop: boolean;
+  setIsSequencerLoop: (isSequencerLoop: boolean) => void;
+}
 Tone.getTransport().bpm.value = 120;
 Tone.getTransport().loop = true;
 Tone.getTransport().loopStart = "0:0:0";
 Tone.getTransport().loopEnd = "4:0:0";
 
-const TransportControls = () => {
+const TransportControls: React.FC<TransportControlsProps> = ({
+  timeline,
+  selectedSequencerIndex,
+  isSequencerLoop,
+  setIsSequencerLoop,
+}) => {
   const [, forceUpdate] = useState({});
 
   const handlePlay = () => {
-    Tone.getTransport().start();
+    if (isSequencerLoop) {
+      Tone.getTransport().position = Tone.getTransport().loopStart;
+      Tone.getTransport().start();
+    } else {
+      Tone.getTransport().start();
+    }
   };
 
   const handlePause = () => {
@@ -19,6 +36,27 @@ const TransportControls = () => {
 
   const handleStop = () => {
     Tone.getTransport().stop();
+  };
+
+  const toggleSequencerLoop = () => {
+    handleStop();
+    if (isSequencerLoop) {
+      // Remove phantom loop and reset transport
+      Tone.getTransport().cancel(Tone.getTransport().loopStart);
+      Tone.getTransport().loopStart = "0:0:0";
+      Tone.getTransport().loopEnd = timeline.length + ":0:0";
+      timeline.removeBlock(selectedSequencerIndex, timeline.length);
+      timeline.sequencers[selectedSequencerIndex].events.pop();
+      setIsSequencerLoop(false);
+    } else {
+      // Create a phantom loop after the last timeline block
+      Tone.getTransport().loopStart = timeline.length + ":0:0";
+      Tone.getTransport().loopEnd = Number(timeline.length + 1) + ":0:0";
+      Tone.getTransport().cancel(Tone.getTransport().loopStart);
+      timeline.addBlock(selectedSequencerIndex, timeline.length);
+      timeline.sequencers[selectedSequencerIndex].events.pop();
+      setIsSequencerLoop(true);
+    }
   };
   return (
     <>
@@ -107,6 +145,16 @@ const TransportControls = () => {
           }`}
         >
           Stop
+        </button>
+        <button
+          onClick={toggleSequencerLoop}
+          className={`px-2 rounded ${
+            isSequencerLoop
+              ? "bg-primaryContrast text-primary "
+              : "bg-primary text-primaryContrast"
+          }`}
+        >
+          Sequencer Loop
         </button>
       </div>
     </>
