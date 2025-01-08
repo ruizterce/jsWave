@@ -72,12 +72,12 @@ const TrackUI: React.FC<TrackUIProps> = ({
   };
 
   return (
-    <div className="p-2 bg-stone-100 rounded flex gap-2">
+    <div className="p-2 rounded flex gap-2 bg-lightMild">
       <div className="flex gap-2 w-60">
         {/* Track Management*/}
         <div className="flex flex-col items-center">
           <button
-            className="px-1 w-4 bg-blue-400 rounded-t-full text-xs"
+            className="px-1 w-4 rounded-t-full text-xs bg-light text-dark hover:bg-darkMedium hover:text-light active:bg-dark"
             onClick={() => {
               moveTrackUp(trackIndex);
             }}
@@ -85,13 +85,13 @@ const TrackUI: React.FC<TrackUIProps> = ({
             ^
           </button>
           <button
-            className="px-1 w-4 bg-red-400 text-xs"
+            className="px-1 w-4 text-xs bg-light text-dark hover:bg-darkMedium hover:text-light active:bg-dark"
             onClick={() => removeTrack(trackIndex)}
           >
             X
           </button>
           <button
-            className="px-1 w-4 bg-blue-400 rounded-t-full text-xs rotate-180"
+            className="px-1 w-4 rounded-t-full text-xs rotate-180 bg-light text-dark hover:bg-darkMedium hover:text-light active:bg-dark"
             onClick={() => {
               moveTrackDown(trackIndex);
             }}
@@ -102,7 +102,7 @@ const TrackUI: React.FC<TrackUIProps> = ({
 
         <div className="flex flex-col gap-2">
           <input
-            className="px-2 w-36 rounded-full"
+            className="px-2 w-36 rounded-full bg-light text-dark font-semibold"
             id={"track-" + trackIndex + "-name"}
             value={track.name}
             disabled={Tone.getTransport().state === "started"}
@@ -114,6 +114,7 @@ const TrackUI: React.FC<TrackUIProps> = ({
 
           <input
             type="range"
+            className="appearance-none rounded-full accent-secondary bg-light text-dark hover:bg-darkMedium hover:text-light active:bg-lightMedium"
             min="-60"
             max="0"
             value={track.volume}
@@ -127,7 +128,7 @@ const TrackUI: React.FC<TrackUIProps> = ({
           onClick={(e) => {
             openMenu(e, { type: "subdivision", trackIndex });
           }}
-          className="px-2 bg-secondary text-sm rounded"
+          className="px-2 text-sm rounded bg-secondary hover:bg-darkMedium active:bg-dark"
         >
           {track.noteDuration}
         </button>
@@ -151,7 +152,7 @@ const TrackUI: React.FC<TrackUIProps> = ({
           <div
             key={noteIndex}
             className={`h-12 w-12 rounded text-center cursor-pointer ${
-              noteIndex % 4 === 0 ? "brightness-125" : ""
+              noteIndex % 4 === 0 ? "saturate-200" : "saturate-50"
             } ${
               note
                 ? "bg-primary text-primaryContrast hover:bg-gray-500"

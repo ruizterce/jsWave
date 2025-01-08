@@ -3,11 +3,6 @@ import { Sequencer } from "./sequencer";
 import { Track } from "./track";
 import { Notes } from "../types";
 
-Tone.getTransport().bpm.value = 120;
-Tone.getTransport().loop = true;
-Tone.getTransport().loopStart = "0:0:0";
-Tone.getTransport().loopEnd = "4:0:0";
-
 export class Timeline {
   private _length: number;
   private _sequencers: Sequencer[];

@@ -61,22 +61,23 @@ const SequencerUI: React.FC<SequencerUIProps> = ({
   const activeBlock = progress ? Math.floor(progress * notesLength) : null;
 
   return (
-    <div className="p-4 bg-stone-300 rounded flex flex-col gap-1 max-h-full overflow-auto">
-      <input
-        className="max-w-36 px-2 text-center rounded-full"
-        id={"sequencer-" + sequencerIndex + "-name"}
-        value={sequencer.name}
-        onChange={(e) => {
-          sequencer.name = e.target.value;
-          forceUpdateParent();
-        }}
-        maxLength={12}
-      />
-
+    <div className="p-4 bg-lightMedium rounded-2xl flex flex-col gap-1 max-h-full overflow-auto">
       <div className="flex">
-        <div className="w-[250px]"></div>
+        <div className="w-[250px]">
+          {" "}
+          <input
+            className="ml-8 max-w-36 px-2 rounded-full bg-lightMild border-2 border-light text-dark font-semibold"
+            id={"sequencer-" + sequencerIndex + "-name"}
+            value={sequencer.name}
+            onChange={(e) => {
+              sequencer.name = e.target.value;
+              forceUpdateParent();
+            }}
+            maxLength={12}
+          />
+        </div>
         {/* Progress Tracker */}
-        <div className="flex gap-6 bg-stone-100 rounded-t-2xl rounded-b px-4">
+        <div className="flex items-center gap-6 bg-lightMild rounded-t-2xl rounded-b px-4">
           {Array.from(
             {
               length: notesLength,
@@ -86,8 +87,8 @@ const SequencerUI: React.FC<SequencerUIProps> = ({
                 key={`progress-square-${index}`}
                 className={`w-4 h-4 mx-2 my-1  rounded-full cursor-pointer  ${
                   index === activeBlock
-                    ? "bg-primary text-primaryContrast"
-                    : "bg-gray-200 hover:bg-primary hover:brightness-150"
+                    ? "bg-accent text-primaryContrast"
+                    : "bg-gray-200 hover:bg-accent hover:brightness-150"
                 }`}
                 onClick={() => {
                   handleProgressClick(index);
@@ -122,7 +123,7 @@ const SequencerUI: React.FC<SequencerUIProps> = ({
       {/* Add Buttons*/}
       <div className="self-start my-2 flex gap-2">
         <button
-          className=" p-2 bg-secondary rounded text-sm hover:bg-gray-50"
+          className=" p-2  rounded text-sm bg-secondary hover:bg-darkMedium active:bg-dark"
           onClick={() => {
             sequencer.addTrack(`Synth-${sequencer.tracks.length + 1}`, "synth");
             forceUpdate({});
@@ -144,7 +145,7 @@ const SequencerUI: React.FC<SequencerUIProps> = ({
           >
             <button
               type="button"
-              className="p-2 bg-secondary rounded text-sm hover:bg-gray-50"
+              className="p-2 rounded text-sm bg-secondary hover:bg-darkMedium active:bg-dark"
             >
               + Sampler
             </button>
