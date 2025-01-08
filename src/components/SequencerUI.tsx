@@ -43,6 +43,16 @@ const SequencerUI: React.FC<SequencerUIProps> = ({
     Tone.getTransport().position = bar + ":" + quarter + ":" + sixteenth;
   };
 
+  // Handle synth context menu
+  const handleAddSynthClick = (synthType: string) => {
+    sequencer.addTrack(
+      `${synthType}-${sequencer.tracks.length + 1}`,
+      synthType
+    );
+    forceUpdate({});
+    closeMenu();
+  };
+
   // Handle sampler context menu
   const handleAddSamplerClick = (samplePath: string) => {
     sequencer.addTrack(
@@ -121,16 +131,65 @@ const SequencerUI: React.FC<SequencerUIProps> = ({
       ))}
 
       {/* Add Buttons*/}
+      {/* Context Menu for Add Synth  */}
       <div className="self-start my-2 flex gap-2">
         <button
           className=" p-2  rounded text-sm bg-secondary hover:bg-darkMedium active:bg-dark"
-          onClick={() => {
-            sequencer.addTrack(`Synth-${sequencer.tracks.length + 1}`, "synth");
-            forceUpdate({});
+          onClick={(e) => {
+            openMenu(e, {
+              type: "synth",
+              trackIndex: 0,
+            });
           }}
         >
           + Synth
         </button>
+
+        {contextMenu.open && contextMenu.data?.type === "synth" && (
+          <ContextMenu
+            x={contextMenu.x}
+            y={contextMenu.y}
+            menuRef={menuRef}
+            items={[
+              {
+                label: "AMSynth",
+                onClick: () => handleAddSynthClick("AMSynth"),
+              },
+              {
+                label: "FMSynth",
+                onClick: () => handleAddSynthClick("FMSynth"),
+              },
+              {
+                label: "DuoSynth",
+                onClick: () => handleAddSynthClick("DuoSynth"),
+              },
+              {
+                label: "MembraneSynth",
+                onClick: () => handleAddSynthClick("MembraneSynth"),
+              },
+              {
+                label: "MetalSynth",
+                onClick: () => handleAddSynthClick("MetalSynth"),
+              },
+              {
+                label: "MonoSynth",
+                onClick: () => handleAddSynthClick("MonoSynth"),
+              },
+              {
+                label: "NoiseSynth",
+                onClick: () => handleAddSynthClick("NoiseSynth"),
+              },
+              {
+                label: "PluckSynth",
+                onClick: () => handleAddSynthClick("PluckSynth"),
+              },
+              {
+                label: "PolySynth",
+                onClick: () => handleAddSynthClick("PolySynth"),
+              },
+            ]}
+          />
+        )}
 
         <div className="relative inline-block text-left">
           {/* Context Menu for Add Sampler  */}

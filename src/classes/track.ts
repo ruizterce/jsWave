@@ -1,9 +1,19 @@
 import * as Tone from "tone";
 import { Time } from "tone/build/esm/core/type/Units";
+import { Notes } from "../types";
 
-type InstrumentType = Tone.Synth | Tone.Sampler;
-type Note = string | string[] | null;
-type Notes = Note[];
+type InstrumentType =
+  | Tone.Synth
+  | Tone.Sampler
+  | Tone.AMSynth
+  | Tone.DuoSynth
+  | Tone.FMSynth
+  | Tone.MembraneSynth
+  | Tone.MetalSynth
+  | Tone.MonoSynth
+  | Tone.NoiseSynth
+  | Tone.PluckSynth
+  | Tone.PolySynth;
 
 export class Track {
   private _name: string;
@@ -90,6 +100,24 @@ export class Track {
     switch (instrumentType) {
       case "synth":
         return new Tone.Synth().toDestination();
+      case "AMSynth":
+        return new Tone.AMSynth().toDestination();
+      case "FMSynth":
+        return new Tone.FMSynth().toDestination();
+      case "DuoSynth":
+        return new Tone.DuoSynth().toDestination();
+      case "MembraneSynth":
+        return new Tone.MembraneSynth().toDestination();
+      case "MetalSynth":
+        return new Tone.MetalSynth().toDestination();
+      case "MonoSynth":
+        return new Tone.MonoSynth().toDestination();
+      case "NoiseSynth":
+        return new Tone.NoiseSynth().toDestination();
+      case "PluckSynth":
+        return new Tone.PluckSynth().toDestination();
+      case "PolySynth":
+        return new Tone.PolySynth().toDestination();
       case "sampler":
         console.log(this._sampleUrl);
         if (this._sampleUrl) {
