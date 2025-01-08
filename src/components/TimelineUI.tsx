@@ -131,7 +131,13 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
                   <button
                     className="px-1  rounded-full text-xs bg-light text-dark hover:bg-darkMedium hover:text-light active:bg-dark"
                     onClick={() => {
-                      timeline.removeSequencer(sequencerIndex);
+                      const confirmed = window.confirm(
+                        "Are you sure you want to remove this sequencer?"
+                      );
+                      if (confirmed) {
+                        timeline.removeSequencer(sequencerIndex);
+                      }
+
                       forceUpdate({});
                     }}
                   >

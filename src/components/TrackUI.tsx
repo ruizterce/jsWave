@@ -86,7 +86,14 @@ const TrackUI: React.FC<TrackUIProps> = ({
           </button>
           <button
             className="px-1 w-4 text-xs bg-light text-dark hover:bg-darkMedium hover:text-light active:bg-dark"
-            onClick={() => removeTrack(trackIndex)}
+            onClick={() => {
+              const confirmed = window.confirm(
+                "Are you sure you want to remove this track?"
+              );
+              if (confirmed) {
+                removeTrack(trackIndex);
+              }
+            }}
           >
             X
           </button>
