@@ -42,7 +42,8 @@ const TransportControls: React.FC<TransportControlsProps> = ({
   const toggleSequencerLoop = () => {
     handleStop();
     if (isSequencerLoop) {
-      // Remove phantom loop and reset transport
+      // Remove phantom block and reset transport
+      timeline.isSequencerLoop = false;
       Tone.getTransport().cancel(Tone.getTransport().loopStart);
       Tone.getTransport().loopStart = "0:0:0";
       Tone.getTransport().loopEnd = timeline.length + ":0:0";
@@ -50,7 +51,8 @@ const TransportControls: React.FC<TransportControlsProps> = ({
       timeline.sequencers[selectedSequencerIndex].events.pop();
       setIsSequencerLoop(false);
     } else {
-      // Create a phantom loop after the last timeline block
+      // Create a phantom block loop after the last timeline block
+      timeline.isSequencerLoop = true;
       Tone.getTransport().loopStart = timeline.length + ":0:0";
       Tone.getTransport().loopEnd = Number(timeline.length + 1) + ":0:0";
       Tone.getTransport().cancel(Tone.getTransport().loopStart);

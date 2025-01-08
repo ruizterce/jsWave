@@ -6,10 +6,12 @@ import { Notes } from "../types";
 export class Timeline {
   private _length: number;
   private _sequencers: Sequencer[];
+  isSequencerLoop: boolean;
 
   constructor(length: number, sequencers: Sequencer[]) {
     this._length = length;
     this._sequencers = sequencers;
+    this.isSequencerLoop = false;
   }
 
   get length(): number {
@@ -101,6 +103,14 @@ export class Timeline {
         sequencer.stop(end);
       }
     });
+
+    // If in sequencer loop mode, add events on one more phantom block
+    if (this.isSequencerLoop) {
+      const start = `${sequencer.events.length}:0:0`;
+      const end = `${sequencer.events.length + 1}:0:0`;
+      sequencer.start(start, 0);
+      sequencer.stop(end);
+    }
   }
 
   addSequencer(name: string): void {
