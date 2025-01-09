@@ -109,9 +109,9 @@ const SequencerUI: React.FC<SequencerUIProps> = ({
         </div>
       </div>
       {/* Sequencer Tracks */}
-      {sequencer.tracks.map((track, trackIndex) => (
+      {sequencer.tracks.map((_track, trackIndex) => (
         <TrackUI
-          key={track.name}
+          key={`sequencer-${sequencerIndex}-track-${trackIndex}`}
           timeline={timeline}
           sequencerIndex={sequencerIndex}
           trackIndex={trackIndex}

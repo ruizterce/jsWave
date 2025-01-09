@@ -12,7 +12,7 @@ interface TransportControlsProps {
 Tone.getTransport().bpm.value = 120;
 Tone.getTransport().loop = true;
 Tone.getTransport().loopStart = "0:0:0";
-Tone.getTransport().loopEnd = "4:0:0";
+Tone.getTransport().loopEnd = "8:0:0";
 
 const TransportControls: React.FC<TransportControlsProps> = ({
   timeline,
