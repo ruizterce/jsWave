@@ -104,8 +104,11 @@ export class Track {
         return new Tone.Synth().toDestination();
       case "AMSynth":
         return new Tone.AMSynth().toDestination();
-      case "FMSynth":
-        return new Tone.FMSynth().toDestination();
+      case "FMSynth": {
+        const inst = new Tone.FMSynth().toDestination();
+        inst.oscillator.sourceType = "fm";
+        return inst;
+      }
       case "DuoSynth":
         return new Tone.DuoSynth().toDestination();
       case "MembraneSynth":

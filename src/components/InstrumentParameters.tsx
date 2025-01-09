@@ -13,6 +13,50 @@ const InstrumentParameters: React.FC<InstrumentParametersProps> = ({
 
   return (
     <div className="flex gap-2 p-1">
+      {/* Sampler */}
+      {track.instrument instanceof Tone.Sampler && (
+        <div className="flex border-2 border-medium p-1  rounded-xl">
+          <div className="flex flex-col items-center text-dark w-16">
+            <label htmlFor="sustain">Attack</label>
+            <div className="relative w-8 h-36">
+              <input
+                type="range"
+                min={0.0001}
+                max={1}
+                step={0.0005}
+                value={Number(track.instrument.attack)}
+                onChange={(e) => {
+                  (track.instrument as Tone.Sampler).attack = e.target.value;
+                  forceUpdate({});
+                }}
+                className="w-30 h-30 -translate-x-12 translate-y-16 -rotate-90 accent-secondary"
+              />
+            </div>
+            <span>{Number(track.instrument.attack)}</span>
+          </div>
+
+          <div className="flex flex-col items-center text-dark w-16">
+            <label htmlFor="sustain">Release</label>
+            <div className="relative w-8 h-36">
+              <input
+                type="range"
+                min={0.0001}
+                max={3}
+                step={0.0005}
+                value={Number(track.instrument.release)}
+                onChange={(e) => {
+                  (track.instrument as Tone.Sampler).release = e.target.value;
+                  forceUpdate({});
+                }}
+                className="w-30 h-30 -translate-x-12 translate-y-16 -rotate-90 accent-secondary"
+              />
+            </div>
+            <span>{Number(track.instrument.release)}</span>
+          </div>
+        </div>
+      )}
+
+      {/* Synths */}
       {/*Envelope*/}
       {(track.instrument instanceof Tone.AMSynth ||
         track.instrument instanceof Tone.FMSynth ||
@@ -322,6 +366,38 @@ const InstrumentParameters: React.FC<InstrumentParametersProps> = ({
             <span>{Number(track.instrument.modulationEnvelope.release)}</span>
           </div>
 
+          {track.instrument.oscillator.sourceType === "fm" && (
+            <>
+              <div className="flex flex-col items-center text-dark w-16">
+                <label htmlFor="release">MIndex</label>
+                <div className="relative w-8 h-36">
+                  <input
+                    id="release"
+                    type="range"
+                    min={0}
+                    max={50}
+                    step={1}
+                    value={Number(
+                      track.instrument.oscillator.modulationIndex?.value
+                    )}
+                    onChange={(e) => {
+                      const modulationIndex = (track.instrument as Tone.FMSynth)
+                        .oscillator.modulationIndex;
+                      if (modulationIndex) {
+                        modulationIndex.value = Number(e.target.value);
+                      }
+                      forceUpdate({});
+                    }}
+                    className="absolute w-30 h-30 -translate-x-12 translate-y-16 -rotate-90 accent-secondary"
+                  />
+                </div>
+                <span>
+                  {Number(track.instrument.oscillator.modulationIndex?.value)}
+                </span>
+              </div>
+            </>
+          )}
+
           {track.instrument.oscillator.sourceType === "pulse" && (
             <div className="flex flex-col items-center text-dark w-16">
               <label htmlFor="release">ModWdth</label>
@@ -356,8 +432,8 @@ const InstrumentParameters: React.FC<InstrumentParametersProps> = ({
                   id="release"
                   type="range"
                   min={0}
-                  max={30}
-                  step={1}
+                  max={100}
+                  step={0.1}
                   value={Number(
                     track.instrument.oscillator.modulationFrequency?.value
                   )}

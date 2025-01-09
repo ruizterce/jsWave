@@ -1,7 +1,5 @@
 import * as Tone from "tone";
 import { Sequencer } from "./sequencer";
-import { Track } from "./track";
-import { Notes } from "../types";
 
 export class Timeline {
   private _length: number;
@@ -114,11 +112,7 @@ export class Timeline {
   }
 
   addSequencer(name: string): void {
-    this._sequencers.push(
-      new Sequencer(name, this._length, [
-        new Track("synth1", "synth", Array(16).fill(null) as Notes),
-      ])
-    );
+    this._sequencers.push(new Sequencer(name, this._length, []));
     console.log("Sequencer added.");
   }
 
