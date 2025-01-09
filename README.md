@@ -1,50 +1,64 @@
-# React + TypeScript + Vite
+# JSWave
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**JSWave** is a modern web-based music production tool inspired by legendary hardware such as the Roland TR-808, Akai MPC or E-mu SP-1200. Built with **[React](https://react.dev)**, **[Tone.js](https://github.com/Tonejs/Tone.js)**, JSWave offers a seamless interface for music producers to explore, compose, and create beats and melodies directly in their browser.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 🎵 Music Production
 
-## Expanding the ESLint configuration
+- **Timeline View**: Visualize and organize your tracks with an intuitive block based timeline interface.
+- **Sequencer**: Step-based sequencing for creating beats and loops in a familiar 16n pattern.
+- **BPM Control**: Adjust tempo dynamically to fit your groove.
+- **Play with the instruments**: Includes different types of synths with several parameters to tweak.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### 🎚️ Advanced Controls
 
-- Configure the top-level `parserOptions` property like this:
+- **Audio Recording**: Record and export your tracks for further production.
+- **Loop Toggle**: Enable or disable looping for the sequence.
+- **Dynamic Blocks**: Add and edit blocks in the timeline for complex arrangements.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+### 🛠️ Built with Modern Tools
+
+- **Tone.js**: Powering the audio engine with robust sound synthesis and sequencing.
+- **React**: For a responsive, component-based architecture.
+- **Tailwind CSS**: For a clean and highly customizable design system.
+
+## Usage
+
+- Open the app in your browser.
+- Use the Transport Controls to play, pause, stop, or loop your sequence.
+- Add blocks to the timeline and edit sequences to craft your track.
+- Export your creation as an audio file using the record and download feature.
+
+## Local installation
+
+To get started, clone the repository and install dependencies:
+
+```bash
+git clone https://github.com/ruizterce/jsWave.git
+cd jsWave
+npm install
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+Run the development server with the following command:
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+```bash
+npm run dev
 ```
+
+## Credits
+
+Crafted with ❤️ by [ruizterce](https://github.com/ruizterce).
+
+Powered by:
+
+- [React](https://react.dev)
+- [Tone.js](https://github.com/Tonejs/Tone.js)
+- [Tailwind CSS](https://tailwindcss.com/)
+
+Special thanks to the open-source community for providing the tools to build this project.
+
+## License
+
+License
+This project is licensed under the [MIT License](https://opensource.org/license/MIT).
