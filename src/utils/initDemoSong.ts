@@ -247,6 +247,80 @@ export const initDemoSong = () => {
         "TR-808/Snare-Mid.mp3"
       ),
     ]),
+
+    new Sequencer("Perc-1", 8, [
+      new Track(
+        "Maracas",
+        "sampler",
+        [
+          null,
+          "E5",
+          "C5",
+          "E5",
+          "C5",
+          null,
+          null,
+          "C5",
+          "E5",
+          "C5",
+          null,
+          null,
+
+          "C5",
+          null,
+          null,
+          null,
+        ],
+        "TR-808/Maracas.mp3"
+      ),
+      new Track(
+        "Snare Bright",
+        "sampler",
+        [
+          "C5",
+          null,
+          null,
+          "C5",
+          null,
+          null,
+          "C5",
+          null,
+          null,
+          null,
+          "C5",
+          null,
+
+          "C5",
+          null,
+          null,
+          null,
+        ],
+        "TR-808/Snare-Bright.mp3"
+      ),
+      new Track(
+        "Open Hat Short",
+        "sampler",
+        [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          "C5",
+          null,
+        ],
+        "TR-808/Open-Hat-Short.mp3"
+      ),
+    ]),
   ];
 
   sequencers[0].tracks.forEach((track) => {
@@ -305,6 +379,9 @@ export const initDemoSong = () => {
   timeline.addBlock(3, 5);
   timeline.addBlock(3, 6);
   timeline.addBlock(3, 7);
+
+  timeline.addBlock(4, 3);
+  timeline.addBlock(4, 7);
 
   return timeline;
 };
