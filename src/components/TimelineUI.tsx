@@ -38,7 +38,8 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
   const activeBlock = position ? Number(position.toString().split(":")[0]) : 0;
 
   return (
-    <div className="relative flex flex-col gap-2 items-center h-full bg-light rounded-3xl p-8 shadow-xl">
+    <div className="relative flex flex-col gap-2 items-center h-full bg-light rounded-3xl p-8 pb-14 shadow-xl">
+      {/* Transport Controls */}
       <TransportControls
         timeline={timeline}
         selectedSequencerIndex={selectedSequencerIndex}
@@ -223,6 +224,41 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
           forceUpdate({});
         }}
       />
+
+      <div className="absolute w-full px-8 bottom-4 flex items-end justify-between">
+        {/* Logo */}
+        <div className="w-32">
+          <img src="src/assets/img/jsWave.svg" alt="" />
+        </div>
+        {/* Credits */}
+        <div className="text-darkMedium flex items-center gap-2">
+          <span>Crafted with love by</span>
+          <a
+            href="https://github.com/ruizterce/react-beats"
+            className="flex items-end gap-2 hover:text-accent"
+          >
+            <span>ruizterce</span>
+            <img
+              src="src/assets/icons/github-original.svg"
+              alt="github icon"
+              className="invert h-5 -translate-y-[1px]"
+            />
+          </a>
+          <span>|</span>
+          <span>Powered by </span>
+          <a
+            href="https://github.com/Tonejs/Tone.js"
+            className="flex items-center gap-2 hover:text-accent"
+          >
+            <span>Tone.js</span>
+            <img
+              src="src/assets/icons/github-original.svg"
+              alt="github icon"
+              className="invert h-5 -translate-y-[1px]"
+            />
+          </a>
+        </div>
+      </div>
     </div>
   );
 };

@@ -64,8 +64,8 @@ const TransportControls: React.FC<TransportControlsProps> = ({
     }
   };
   return (
-    <>
-      <div className="absolute left-12 top-9 flex gap-1 items-center px-4 py-1  rounded-full text-dark">
+    <div className="relative flex gap-2 w-full justify-center items-center bg-lightMedium  rounded-2xl p-2">
+      <div className="absolute left-2 flex gap-1 items-center px-4 py-1  rounded-full text-dark">
         <span className="h-5 rounded-full text-center ">
           BPM
           <b className="bg-light rounded-full ml-1 px-3">
@@ -133,71 +133,70 @@ const TransportControls: React.FC<TransportControlsProps> = ({
           />
         </button>
       </div>
-      <div className="flex gap-2 w-full justify-center items-center bg-lightMedium  rounded-2xl p-2">
-        <button
-          onClick={handlePlay}
-          disabled={Tone.getTransport().state === "started"}
-          className={`px-2 rounded h ${
-            Tone.getTransport().state !== "started"
-              ? "bg-primary text-primaryContrast hover:bg-darkMedium hover:invert"
-              : "bg-primaryContrast text-primary shadow-xl"
+
+      <button
+        onClick={handlePlay}
+        disabled={Tone.getTransport().state === "started"}
+        className={`px-2 rounded h ${
+          Tone.getTransport().state !== "started"
+            ? "bg-primary text-primaryContrast hover:bg-darkMedium hover:invert"
+            : "bg-primaryContrast text-primary shadow-xl"
+        }`}
+      >
+        <img
+          src="src/assets/icons/play_arrow.svg"
+          alt="Play"
+          className={`brightness-0 ${
+            Tone.getTransport().state !== "started" ? "" : "invert"
           }`}
-        >
-          <img
-            src="src/assets/icons/play_arrow.svg"
-            alt="Play"
-            className={`brightness-0 ${
-              Tone.getTransport().state !== "started" ? "" : "invert"
-            }`}
-          />
-        </button>
-        <button
-          onClick={handlePause}
-          disabled={Tone.getTransport().state !== "started"}
-          className={`px-2 rounded ${
-            Tone.getTransport().state !== "started"
-              ? "bg-primaryContrast text-primary"
-              : "bg-primary text-primaryContrast hover:bg-darkMedium hover:invert"
+        />
+      </button>
+      <button
+        onClick={handlePause}
+        disabled={Tone.getTransport().state !== "started"}
+        className={`px-2 rounded ${
+          Tone.getTransport().state !== "started"
+            ? "bg-primaryContrast text-primary"
+            : "bg-primary text-primaryContrast hover:bg-darkMedium hover:invert"
+        }`}
+      >
+        <img
+          src="src/assets/icons/pause.svg"
+          alt="Pause"
+          className={`brightness-0 ${
+            Tone.getTransport().state !== "started" ? "invert" : ""
           }`}
-        >
-          <img
-            src="src/assets/icons/pause.svg"
-            alt="Pause"
-            className={`brightness-0 ${
-              Tone.getTransport().state !== "started" ? "invert" : ""
-            }`}
-          />
-        </button>
-        <button
-          onClick={handleStop}
-          disabled={Tone.getTransport().state === "stopped"}
-          className={`px-2 rounded ${
-            Tone.getTransport().state === "stopped"
-              ? "bg-primaryContrast text-primary"
-              : "bg-primary text-primaryContrast hover:bg-darkMedium hover:invert"
+        />
+      </button>
+      <button
+        onClick={handleStop}
+        disabled={Tone.getTransport().state === "stopped"}
+        className={`px-2 rounded ${
+          Tone.getTransport().state === "stopped"
+            ? "bg-primaryContrast text-primary"
+            : "bg-primary text-primaryContrast hover:bg-darkMedium hover:invert"
+        }`}
+      >
+        <img
+          src="src/assets/icons/stop.svg"
+          alt="Stop"
+          className={`brightness-0 ${
+            Tone.getTransport().state === "stopped" ? "invert" : ""
           }`}
-        >
-          <img
-            src="src/assets/icons/stop.svg"
-            alt="Stop"
-            className={`brightness-0 ${
-              Tone.getTransport().state === "stopped" ? "invert" : ""
-            }`}
-          />
-        </button>
-        <button
-          onClick={toggleSequencerLoop}
-          className={`px-2 rounded ${
-            isSequencerLoop
-              ? "bg-red-200 text-medium"
-              : "bg-primary text-primaryContrast hover:bg-darkMedium hover:invert"
-          }`}
-        >
-          Sequencer Loop
-        </button>
-        <AudioRecorder handlePlay={handlePlay} handleStop={handleStop} />
-      </div>
-    </>
+        />
+      </button>
+      <button
+        onClick={toggleSequencerLoop}
+        className={`px-2 rounded ${
+          isSequencerLoop
+            ? "bg-red-200 text-medium"
+            : "bg-primary text-primaryContrast hover:bg-darkMedium hover:invert"
+        }`}
+      >
+        Sequencer Loop
+      </button>
+      <AudioRecorder handlePlay={handlePlay} handleStop={handleStop} />
+    </div>
   );
 };
 
