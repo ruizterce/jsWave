@@ -59,7 +59,11 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
               }}
               className="w-5 h-5 rounded-full leading-4 bg-light text-dark hover:bg-darkMedium hover:text-light active:bg-dark"
             >
-              -
+              <img
+                src="src/assets/icons/remove.svg"
+                alt="-"
+                className="brightness-0 invert"
+              />
             </button>
             <button
               onClick={() => {
@@ -68,7 +72,11 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
               }}
               className="w-5 h-5 rounded-full leading-4 bg-light text-dark hover:bg-darkMedium hover:text-light active:bg-dark"
             >
-              +
+              <img
+                src="src/assets/icons/add.svg"
+                alt="+"
+                className="brightness-0 invert"
+              />
             </button>
           </div>
           <div className="flex px-2 gap-1 mb-1 justify-center">
@@ -102,7 +110,7 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
                   }`}
                 >
                   <button
-                    className="px-1 rounded-full text-xs bg-light text-dark hover:bg-darkMedium hover:text-light active:bg-dark"
+                    className="w-4 h-4 rounded-full text-xs bg-light text-dark hover:bg-darkMedium hover:text-light active:bg-dark"
                     onClick={() => {
                       timeline.moveSequencerUp(sequencerIndex);
                       if (selectedSequencerIndex > 0) {
@@ -111,10 +119,14 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
                       forceUpdate({});
                     }}
                   >
-                    ^
+                    <img
+                      src="src/assets/icons/arrow_upward.svg"
+                      alt="Up"
+                      className="brightness-0 invert"
+                    />
                   </button>
                   <button
-                    className="px-1 rounded-full text-xs rotate-180 bg-light text-dark hover:bg-darkMedium hover:text-light active:bg-dark"
+                    className="w-4 h-4 rounded-full text-xs bg-light text-dark hover:bg-darkMedium hover:text-light active:bg-dark"
                     onClick={() => {
                       timeline.moveSequencerDown(sequencerIndex);
                       if (
@@ -126,10 +138,14 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
                       forceUpdate({});
                     }}
                   >
-                    ^
+                    <img
+                      src="src/assets/icons/arrow_downward.svg"
+                      alt="Up"
+                      className="brightness-0 invert"
+                    />
                   </button>
                   <button
-                    className="px-1  rounded-full text-xs bg-light text-dark hover:bg-darkMedium hover:text-light active:bg-dark"
+                    className="w-4 h-4 rounded-full text-xs bg-light text-dark hover:bg-teal-800 hover:invert hover:text-light active:bg-dark"
                     onClick={() => {
                       const confirmed = window.confirm(
                         "Are you sure you want to remove this sequencer?"
@@ -141,7 +157,11 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
                       forceUpdate({});
                     }}
                   >
-                    X
+                    <img
+                      src="src/assets/icons/close.svg"
+                      alt="Up"
+                      className="brightness-0 invert"
+                    />
                   </button>
 
                   <button

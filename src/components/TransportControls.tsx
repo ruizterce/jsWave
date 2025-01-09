@@ -43,13 +43,15 @@ const TransportControls: React.FC<TransportControlsProps> = ({
     handleStop();
     if (isSequencerLoop) {
       // Remove phantom block and reset transport
-      timeline.isSequencerLoop = false;
-      Tone.getTransport().cancel(Tone.getTransport().loopStart);
-      Tone.getTransport().loopStart = "0:0:0";
-      Tone.getTransport().loopEnd = timeline.length + ":0:0";
-      timeline.removeBlock(selectedSequencerIndex, timeline.length);
-      timeline.sequencers[selectedSequencerIndex].events.pop();
-      setIsSequencerLoop(false);
+      setTimeout(() => {
+        timeline.isSequencerLoop = false;
+        Tone.getTransport().cancel(Tone.getTransport().loopStart);
+        Tone.getTransport().loopStart = "0:0:0";
+        Tone.getTransport().loopEnd = timeline.length + ":0:0";
+        timeline.removeBlock(selectedSequencerIndex, timeline.length);
+        timeline.sequencers[selectedSequencerIndex].events.pop();
+        setIsSequencerLoop(false);
+      }, 100);
     } else {
       // Create a phantom block loop after the last timeline block
       timeline.isSequencerLoop = true;
@@ -79,7 +81,11 @@ const TransportControls: React.FC<TransportControlsProps> = ({
           }}
           className="w-5 h-5 rounded-full leading-4 bg-light text-dark hover:bg-darkMedium hover:text-light active:bg-dark"
         >
-          --
+          <img
+            src="src/assets/icons/keyboard_double_arrow_left.svg"
+            alt="<<"
+            className="invert brightness-0"
+          />
         </button>
         <button
           onClick={() => {
@@ -90,7 +96,11 @@ const TransportControls: React.FC<TransportControlsProps> = ({
           }}
           className="w-4 h-4 rounded-full leading-4 bg-light text-dark hover:bg-darkMedium hover:text-light active:bg-dark"
         >
-          -
+          <img
+            src="src/assets/icons/keyboard_arrow_left.svg"
+            alt="<"
+            className="invert brightness-0"
+          />
         </button>
         <button
           onClick={() => {
@@ -101,7 +111,11 @@ const TransportControls: React.FC<TransportControlsProps> = ({
           }}
           className="w-4 h-4 rounded-full leading-4 bg-light text-dark hover:bg-darkMedium hover:text-light active:bg-dark"
         >
-          +
+          <img
+            src="src/assets/icons/keyboard_arrow_right.svg"
+            alt=">"
+            className="invert brightness-0"
+          />
         </button>
         <button
           onClick={() => {
@@ -112,54 +126,76 @@ const TransportControls: React.FC<TransportControlsProps> = ({
           }}
           className="w-5 h-5 rounded-full leading-4 bg-light text-dark hover:bg-darkMedium hover:text-light active:bg-dark"
         >
-          ++
+          <img
+            src="src/assets/icons/keyboard_double_arrow_right.svg"
+            alt=">>"
+            className="invert brightness-0"
+          />
         </button>
       </div>
-      <div className="flex gap-2 w-full justify-center items-center bg-lightMedium rounded-2xl p-2">
+      <div className="flex gap-2 w-full justify-center items-center bg-lightMedium  rounded-2xl p-2">
         <button
           onClick={handlePlay}
           disabled={Tone.getTransport().state === "started"}
-          className={`px-2 rounded ${
+          className={`px-2 rounded h ${
             Tone.getTransport().state !== "started"
-              ? "bg-primary text-primaryContrast"
+              ? "bg-primary text-primaryContrast hover:bg-darkMedium hover:invert"
               : "bg-primaryContrast text-primary shadow-xl"
           }`}
         >
-          Play
+          <img
+            src="src/assets/icons/play_arrow.svg"
+            alt="Play"
+            className={`brightness-0 ${
+              Tone.getTransport().state !== "started" ? "" : "invert"
+            }`}
+          />
         </button>
         <button
           onClick={handlePause}
           disabled={Tone.getTransport().state !== "started"}
           className={`px-2 rounded ${
             Tone.getTransport().state !== "started"
-              ? "bg-primaryContrast text-primary "
-              : "bg-primary text-primaryContrast"
+              ? "bg-primaryContrast text-primary"
+              : "bg-primary text-primaryContrast hover:bg-darkMedium hover:invert"
           }`}
         >
-          Pause
+          <img
+            src="src/assets/icons/pause.svg"
+            alt="Pause"
+            className={`brightness-0 ${
+              Tone.getTransport().state !== "started" ? "invert" : ""
+            }`}
+          />
         </button>
         <button
           onClick={handleStop}
           disabled={Tone.getTransport().state === "stopped"}
           className={`px-2 rounded ${
             Tone.getTransport().state === "stopped"
-              ? "bg-primaryContrast text-primary "
-              : "bg-primary text-primaryContrast"
+              ? "bg-primaryContrast text-primary"
+              : "bg-primary text-primaryContrast hover:bg-darkMedium hover:invert"
           }`}
         >
-          Stop
+          <img
+            src="src/assets/icons/stop.svg"
+            alt="Stop"
+            className={`brightness-0 ${
+              Tone.getTransport().state === "stopped" ? "invert" : ""
+            }`}
+          />
         </button>
         <button
           onClick={toggleSequencerLoop}
           className={`px-2 rounded ${
             isSequencerLoop
-              ? "bg-primaryContrast text-primary "
-              : "bg-primary text-primaryContrast"
+              ? "bg-red-200 text-medium"
+              : "bg-primary text-primaryContrast hover:bg-darkMedium hover:invert"
           }`}
         >
           Sequencer Loop
         </button>
-        <AudioRecorder handlePlay={handlePlay} />
+        <AudioRecorder handlePlay={handlePlay} handleStop={handleStop} />
       </div>
     </>
   );

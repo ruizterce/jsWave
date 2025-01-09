@@ -79,15 +79,19 @@ const TrackUI: React.FC<TrackUIProps> = ({
           {/* Track Management*/}
           <div className="flex flex-col items-center">
             <button
-              className="px-1 w-4 rounded-t-full text-xs bg-light text-dark hover:bg-darkMedium hover:text-light active:bg-dark"
+              className="w-4 h-4 rounded-t-full text-xs bg-light text-dark hover:bg-darkMedium hover:text-light active:bg-dark"
               onClick={() => {
                 moveTrackUp(trackIndex);
               }}
             >
-              ^
+              <img
+                src="src/assets/icons/arrow_upward.svg"
+                alt="Up"
+                className="brightness-0 invert"
+              />
             </button>
             <button
-              className="px-1 w-4 text-xs bg-light text-dark hover:bg-darkMedium hover:text-light active:bg-dark"
+              className="w-4 h-4 text-xs bg-light text-dark hover:bg-darkMedium hover:text-light active:bg-dark"
               onClick={() => {
                 const confirmed = window.confirm(
                   "Are you sure you want to remove this track?"
@@ -97,15 +101,23 @@ const TrackUI: React.FC<TrackUIProps> = ({
                 }
               }}
             >
-              X
+              <img
+                src="src/assets/icons/close.svg"
+                alt="Delete"
+                className="brightness-0 invert"
+              />
             </button>
             <button
-              className="px-1 w-4 rounded-t-full text-xs rotate-180 bg-light text-dark hover:bg-darkMedium hover:text-light active:bg-dark"
+              className="w-4 h-4 rounded-b-full text-xs bg-light text-dark hover:bg-darkMedium hover:text-light active:bg-dark"
               onClick={() => {
                 moveTrackDown(trackIndex);
               }}
             >
-              ^
+              <img
+                src="src/assets/icons/arrow_downward.svg"
+                alt="Down"
+                className="brightness-0 invert"
+              />
             </button>
           </div>
 
@@ -132,26 +144,32 @@ const TrackUI: React.FC<TrackUIProps> = ({
               }}
             />
           </div>
-          <button
-            className={`w-6 rounded  ${
-              isParamsOpen ? "bg-medium" : "bg-accent rotate-180"
-            }`}
-            onClick={() => {
-              setIsParamsOpen(!isParamsOpen);
-            }}
-          >
-            ^
-          </button>
-
-          <button
-            onClick={(e) => {
-              openMenu(e, { type: "subdivision", trackIndex });
-            }}
-            className="px-2 text-sm rounded bg-secondary hover:bg-darkMedium active:bg-dark"
-          >
-            {track.noteDuration}
-          </button>
-
+          <div className="flex flex-col gap-1 items-center w-full">
+            <button
+              onClick={(e) => {
+                openMenu(e, { type: "subdivision", trackIndex });
+              }}
+              className="px-2 w-10 h-5 text-sm font-semibold  rounded-full flex items-center justify-center bg-secondary hover:bg-darkMedium active:bg-dark"
+            >
+              {track.noteDuration}
+            </button>
+            <button
+              className={`w-10 h-5 flex items-center justify-center ${
+                isParamsOpen
+                  ? "bg-medium rotate-180 rounded-b-xl rounded-t"
+                  : "bg-accent  rounded-full "
+              }`}
+              onClick={() => {
+                setIsParamsOpen(!isParamsOpen);
+              }}
+            >
+              <img
+                src="src/assets/icons/keyboard_arrow_down.svg"
+                alt="Parameters"
+                className="brightness-0 invert"
+              />
+            </button>
+          </div>
           {/* Context Menu for Subdivisions */}
           {contextMenu.open && contextMenu.data?.type === "subdivision" && (
             <ContextMenu
@@ -171,7 +189,7 @@ const TrackUI: React.FC<TrackUIProps> = ({
             (note: string | string[] | null, noteIndex: number) => (
               <div
                 key={noteIndex}
-                className={`h-12 w-12 rounded text-center cursor-pointer ${
+                className={`h-12 w-12 rounded text-center font-semibold cursor-pointer ${
                   noteIndex % 4 === 0 ? "saturate-200" : "saturate-50"
                 } ${
                   note

@@ -3,9 +3,13 @@ import * as Tone from "tone";
 
 interface AudioRecorderProps {
   handlePlay: () => void;
+  handleStop: () => void;
 }
 
-const AudioRecorder: React.FC<AudioRecorderProps> = ({ handlePlay }) => {
+const AudioRecorder: React.FC<AudioRecorderProps> = ({
+  handlePlay,
+  handleStop,
+}) => {
   const [isRecording, setIsRecording] = useState(false);
   const [audioURL, setAudioURL] = useState<string | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -48,8 +52,11 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({ handlePlay }) => {
       mediaRecorderRef.current &&
       mediaRecorderRef.current.state === "recording"
     ) {
-      mediaRecorderRef.current.stop();
-      setIsRecording(false);
+      handleStop();
+      setTimeout(() => {
+        mediaRecorderRef.current?.stop();
+        setIsRecording(false);
+      }, 500);
     }
   };
 
@@ -58,20 +65,40 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({ handlePlay }) => {
       <button
         onClick={isRecording ? stopRecording : startRecording}
         className={`px-2 rounded ${
-          isRecording ? "bg-red-500" : "bg-accent"
-        } text-white rounded`}
+          isRecording
+            ? "bg-white hover:bg-darkMedium"
+            : "bg-red-500 hover:bg-darkMedium hover:invert"
+        } rounded`}
       >
-        {isRecording ? "Stop Recording" : "Start Recording"}
+        <img
+          src={`src/assets/icons/${
+            isRecording ? "radio_button_checked" : "radio_button_unchecked"
+          }.svg`}
+          alt={`${isRecording ? "Stop Recording" : "Start Recording"}`}
+          className={`${
+            isRecording
+              ? "invert-50 sepia-100 saturate-[100] hue-rotate-180 brightness-100 contrast-100"
+              : "brightness-0 "
+          }`}
+        />
       </button>
       {audioURL && (
-        <div className="flex gap-2  items-center">
-          <a
-            href={audioURL}
-            download="recording.webm"
-            className="px-2 rounded bg-secondary"
-          >
-            Download Recording
-          </a>
+        <div className="relative flex gap-2  items-center">
+          {isRecording ? (
+            <span className="absolute text-red-500">Recording...</span>
+          ) : (
+            <a
+              href={audioURL}
+              download="recording.webm"
+              className="absolute w-10 px-2 rounded bg-secondary hover:bg-medium hover:invert"
+            >
+              <img
+                src="src/assets/icons/download.svg"
+                alt="Download"
+                className="brightness-0 "
+              />
+            </a>
+          )}
         </div>
       )}
     </div>
