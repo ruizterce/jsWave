@@ -217,16 +217,103 @@ const SequencerUI: React.FC<SequencerUIProps> = ({
               menuRef={menuRef}
               items={[
                 {
-                  label: "Kick",
-                  onClick: () => handleAddSamplerClick("TR-808/Kick-Long.mp3"),
+                  label: "808",
+                  onClick: () => handleAddSamplerClick("TR-808/808.mp3"),
                 },
                 {
-                  label: "Snare",
-                  onClick: () => handleAddSamplerClick("TR-808/Snare-Mid.mp3"),
+                  label: "Clap",
+                  onClick: () => handleAddSamplerClick("TR-808/Clap.mp3"),
+                },
+                {
+                  label: "Claves",
+                  onClick: () => handleAddSamplerClick("TR-808/Claves.mp3"),
+                },
+                {
+                  label: "Conga High",
+                  onClick: () => handleAddSamplerClick("TR-808/Conga-High.mp3"),
+                },
+                {
+                  label: "Conga Low",
+                  onClick: () => handleAddSamplerClick("TR-808/Conga-Low.mp3"),
+                },
+                {
+                  label: "Conga Mid",
+                  onClick: () => handleAddSamplerClick("TR-808/Conga-Mid.mp3"),
+                },
+                {
+                  label: "Cowbell",
+                  onClick: () => handleAddSamplerClick("TR-808/Cowbell.mp3"),
+                },
+                {
+                  label: "Cymbal",
+                  onClick: () => handleAddSamplerClick("TR-808/Cymbal.mp3"),
                 },
                 {
                   label: "Hihat",
                   onClick: () => handleAddSamplerClick("TR-808/Hihat.mp3"),
+                },
+                {
+                  label: "Kick Basic",
+                  onClick: () => handleAddSamplerClick("TR-808/Kick-Basic.mp3"),
+                },
+                {
+                  label: "Kick Long",
+                  onClick: () => handleAddSamplerClick("TR-808/Kick-Long.mp3"),
+                },
+                {
+                  label: "Kick Mid",
+                  onClick: () => handleAddSamplerClick("TR-808/Kick-Mid.mp3"),
+                },
+                {
+                  label: "Kick Short",
+                  onClick: () => handleAddSamplerClick("TR-808/Kick-Short.mp3"),
+                },
+                {
+                  label: "Maracas",
+                  onClick: () => handleAddSamplerClick("TR-808/Maracas.mp3"),
+                },
+                {
+                  label: "Open Hat Long",
+                  onClick: () =>
+                    handleAddSamplerClick("TR-808/Open-Hat-Long.mp3"),
+                },
+                {
+                  label: "Open Hat Short",
+                  onClick: () =>
+                    handleAddSamplerClick("TR-808/Open-Hat-Short.mp3"),
+                },
+                {
+                  label: "Rimshot",
+                  onClick: () => handleAddSamplerClick("TR-808/Rimshot.mp3"),
+                },
+                {
+                  label: "Snare Bright",
+                  onClick: () =>
+                    handleAddSamplerClick("TR-808/Snare-Bright.mp3"),
+                },
+                {
+                  label: "Snare High",
+                  onClick: () => handleAddSamplerClick("TR-808/Snare-High.mp3"),
+                },
+                {
+                  label: "Snare Low",
+                  onClick: () => handleAddSamplerClick("TR-808/Snare-Low.mp3"),
+                },
+                {
+                  label: "Snare Mid",
+                  onClick: () => handleAddSamplerClick("TR-808/Snare-Mid.mp3"),
+                },
+                {
+                  label: "Tom High",
+                  onClick: () => handleAddSamplerClick("TR-808/Tom-High.mp3"),
+                },
+                {
+                  label: "Tom Low",
+                  onClick: () => handleAddSamplerClick("TR-808/Tom-Low.mp3"),
+                },
+                {
+                  label: "Tom Mid",
+                  onClick: () => handleAddSamplerClick("TR-808/Tom-Mid.mp3"),
                 },
               ]}
             />
