@@ -61,7 +61,7 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
               className="w-5 h-5 rounded-full leading-4 bg-light text-dark hover:bg-darkMedium hover:text-light active:bg-dark"
             >
               <img
-                src="src/assets/icons/remove.svg"
+                src="/assets/icons/remove.svg"
                 alt="-"
                 className="brightness-0 invert"
               />
@@ -74,7 +74,7 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
               className="w-5 h-5 rounded-full leading-4 bg-light text-dark hover:bg-darkMedium hover:text-light active:bg-dark"
             >
               <img
-                src="src/assets/icons/add.svg"
+                src="/assets/icons/add.svg"
                 alt="+"
                 className="brightness-0 invert"
               />
@@ -121,7 +121,7 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
                     }}
                   >
                     <img
-                      src="src/assets/icons/arrow_upward.svg"
+                      src="/assets/icons/arrow_upward.svg"
                       alt="Up"
                       className="brightness-0 invert"
                     />
@@ -140,7 +140,7 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
                     }}
                   >
                     <img
-                      src="src/assets/icons/arrow_downward.svg"
+                      src="/assets/icons/arrow_downward.svg"
                       alt="Up"
                       className="brightness-0 invert"
                     />
@@ -159,7 +159,7 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
                     }}
                   >
                     <img
-                      src="src/assets/icons/close.svg"
+                      src="/assets/icons/close.svg"
                       alt="Up"
                       className="brightness-0 invert"
                     />
@@ -228,7 +228,7 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
       <div className="absolute w-full px-8 bottom-4 flex items-end justify-between">
         {/* Logo */}
         <div className="w-32">
-          <img src="src/assets/img/jsWave.svg" alt="" />
+          <img src="/assets/img/jsWave.svg" alt="" />
         </div>
         {/* Credits */}
         <div className="text-darkMedium flex items-center gap-2">
@@ -239,7 +239,7 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
           >
             <span>ruizterce</span>
             <img
-              src="src/assets/icons/github-original.svg"
+              src="/assets/icons/github-original.svg"
               alt="github icon"
               className="invert h-5 -translate-y-[1px]"
             />
@@ -252,7 +252,7 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
           >
             <span>Tone.js</span>
             <img
-              src="src/assets/icons/github-original.svg"
+              src="/assets/icons/github-original.svg"
               alt="github icon"
               className="invert h-5 -translate-y-[1px]"
             />

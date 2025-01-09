@@ -85,7 +85,7 @@ const TrackUI: React.FC<TrackUIProps> = ({
               }}
             >
               <img
-                src="src/assets/icons/arrow_upward.svg"
+                src="/assets/icons/arrow_upward.svg"
                 alt="Up"
                 className="brightness-0 invert"
               />
@@ -102,7 +102,7 @@ const TrackUI: React.FC<TrackUIProps> = ({
               }}
             >
               <img
-                src="src/assets/icons/close.svg"
+                src="/assets/icons/close.svg"
                 alt="Delete"
                 className="brightness-0 invert"
               />
@@ -114,7 +114,7 @@ const TrackUI: React.FC<TrackUIProps> = ({
               }}
             >
               <img
-                src="src/assets/icons/arrow_downward.svg"
+                src="/assets/icons/arrow_downward.svg"
                 alt="Down"
                 className="brightness-0 invert"
               />
@@ -164,7 +164,7 @@ const TrackUI: React.FC<TrackUIProps> = ({
               }}
             >
               <img
-                src="src/assets/icons/keyboard_arrow_down.svg"
+                src="/assets/icons/keyboard_arrow_down.svg"
                 alt="Parameters"
                 className="brightness-0 invert"
               />

@@ -31,6 +31,8 @@ export class Track {
   ) {
     this._name = name;
     this._sampleUrl = sampleUrl;
+    console.log("sampleUrl");
+    console.log(sampleUrl);
     this.instrument = this.createInstrument(instrumentType);
     this._notes = notes;
     this._noteDuration = "16n";
@@ -119,14 +121,13 @@ export class Track {
       case "PolySynth":
         return new Tone.PolySynth().toDestination();
       case "sampler":
-        console.log(this._sampleUrl);
         if (this._sampleUrl) {
           console.log(this._sampleUrl);
           return new Tone.Sampler({
             urls: {
               C5: this._sampleUrl,
             },
-            baseUrl: "src/assets/samples/",
+            baseUrl: "/assets/samples/",
           }).toDestination();
         } else {
           throw Error("Undefined Instrument");

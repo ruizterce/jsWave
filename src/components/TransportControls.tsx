@@ -82,7 +82,7 @@ const TransportControls: React.FC<TransportControlsProps> = ({
           className="w-5 h-5 rounded-full leading-4 bg-light text-dark hover:bg-darkMedium hover:text-light active:bg-dark"
         >
           <img
-            src="src/assets/icons/keyboard_double_arrow_left.svg"
+            src="/assets/icons/keyboard_double_arrow_left.svg"
             alt="<<"
             className="invert brightness-0"
           />
@@ -97,7 +97,7 @@ const TransportControls: React.FC<TransportControlsProps> = ({
           className="w-4 h-4 rounded-full leading-4 bg-light text-dark hover:bg-darkMedium hover:text-light active:bg-dark"
         >
           <img
-            src="src/assets/icons/keyboard_arrow_left.svg"
+            src="/assets/icons/keyboard_arrow_left.svg"
             alt="<"
             className="invert brightness-0"
           />
@@ -112,7 +112,7 @@ const TransportControls: React.FC<TransportControlsProps> = ({
           className="w-4 h-4 rounded-full leading-4 bg-light text-dark hover:bg-darkMedium hover:text-light active:bg-dark"
         >
           <img
-            src="src/assets/icons/keyboard_arrow_right.svg"
+            src="/assets/icons/keyboard_arrow_right.svg"
             alt=">"
             className="invert brightness-0"
           />
@@ -127,7 +127,7 @@ const TransportControls: React.FC<TransportControlsProps> = ({
           className="w-5 h-5 rounded-full leading-4 bg-light text-dark hover:bg-darkMedium hover:text-light active:bg-dark"
         >
           <img
-            src="src/assets/icons/keyboard_double_arrow_right.svg"
+            src="/assets/icons/keyboard_double_arrow_right.svg"
             alt=">>"
             className="invert brightness-0"
           />
@@ -144,7 +144,7 @@ const TransportControls: React.FC<TransportControlsProps> = ({
         }`}
       >
         <img
-          src="src/assets/icons/play_arrow.svg"
+          src="/assets/icons/play_arrow.svg"
           alt="Play"
           className={`brightness-0 ${
             Tone.getTransport().state !== "started" ? "" : "invert"
@@ -161,7 +161,7 @@ const TransportControls: React.FC<TransportControlsProps> = ({
         }`}
       >
         <img
-          src="src/assets/icons/pause.svg"
+          src="/assets/icons/pause.svg"
           alt="Pause"
           className={`brightness-0 ${
             Tone.getTransport().state !== "started" ? "invert" : ""
@@ -178,7 +178,7 @@ const TransportControls: React.FC<TransportControlsProps> = ({
         }`}
       >
         <img
-          src="src/assets/icons/stop.svg"
+          src="/assets/icons/stop.svg"
           alt="Stop"
           className={`brightness-0 ${
             Tone.getTransport().state === "stopped" ? "invert" : ""

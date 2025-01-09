@@ -71,7 +71,7 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
         } rounded`}
       >
         <img
-          src={`src/assets/icons/${
+          src={`/assets/icons/${
             isRecording ? "radio_button_checked" : "radio_button_unchecked"
           }.svg`}
           alt={`${isRecording ? "Stop Recording" : "Start Recording"}`}
@@ -93,7 +93,7 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
               className="absolute w-10 px-2 rounded bg-secondary hover:bg-medium hover:invert"
             >
               <img
-                src="src/assets/icons/download.svg"
+                src="/assets/icons/download.svg"
                 alt="Download"
                 className="brightness-0 "
               />
