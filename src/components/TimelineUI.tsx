@@ -61,7 +61,9 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
               className="w-5 h-5 rounded-full leading-4 bg-light text-dark hover:bg-darkMedium hover:text-light active:bg-dark"
             >
               <img
-                src="/assets/icons/remove.svg"
+                src={`${
+                  import.meta.env.VITE_ASSET_URL
+                }/assets/icons/remove.svg`}
                 alt="-"
                 className="brightness-0 invert"
               />
@@ -74,7 +76,7 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
               className="w-5 h-5 rounded-full leading-4 bg-light text-dark hover:bg-darkMedium hover:text-light active:bg-dark"
             >
               <img
-                src="/assets/icons/add.svg"
+                src={`${import.meta.env.VITE_ASSET_URL}/assets/icons/add.svg`}
                 alt="+"
                 className="brightness-0 invert"
               />
@@ -121,7 +123,9 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
                     }}
                   >
                     <img
-                      src="/assets/icons/arrow_upward.svg"
+                      src={`${
+                        import.meta.env.VITE_ASSET_URL
+                      }/assets/icons/arrow_upward.svg`}
                       alt="Up"
                       className="brightness-0 invert"
                     />
@@ -140,8 +144,10 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
                     }}
                   >
                     <img
-                      src="/assets/icons/arrow_downward.svg"
-                      alt="Up"
+                      src={`${
+                        import.meta.env.VITE_ASSET_URL
+                      }/assets/icons/arrow_downward.svg`}
+                      alt="Down"
                       className="brightness-0 invert"
                     />
                   </button>
@@ -159,8 +165,10 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
                     }}
                   >
                     <img
-                      src="/assets/icons/close.svg"
-                      alt="Up"
+                      src={`${
+                        import.meta.env.VITE_ASSET_URL
+                      }/assets/icons/close.svg`}
+                      alt="Delete"
                       className="brightness-0 invert"
                     />
                   </button>
@@ -228,7 +236,10 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
       <div className="absolute w-full px-8 bottom-4 flex items-end justify-between">
         {/* Logo */}
         <div className="w-32">
-          <img src="/assets/img/jsWave.svg" alt="" />
+          <img
+            src={`${import.meta.env.VITE_ASSET_URL}/assets/img/jsWave.svg`}
+            alt=""
+          />
         </div>
         {/* Credits */}
         <div className="text-darkMedium flex items-center gap-2">
@@ -239,7 +250,9 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
           >
             <span>ruizterce</span>
             <img
-              src="/assets/icons/github-original.svg"
+              src={`${
+                import.meta.env.VITE_ASSET_URL
+              }/assets/icons/github-original.svg`}
               alt="github icon"
               className="invert h-5 -translate-y-[1px]"
             />
@@ -252,7 +265,9 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
           >
             <span>Tone.js</span>
             <img
-              src="/assets/icons/github-original.svg"
+              src={`${
+                import.meta.env.VITE_ASSET_URL
+              }/assets/icons/github-original.svg`}
               alt="github icon"
               className="invert h-5 -translate-y-[1px]"
             />

@@ -126,7 +126,7 @@ export class Track {
             urls: {
               C5: this._sampleUrl,
             },
-            baseUrl: "/assets/samples/",
+            baseUrl: `${import.meta.env.VITE_ASSET_URL}assets/samples/`,
           }).toDestination();
         } else {
           throw Error("Undefined Instrument");

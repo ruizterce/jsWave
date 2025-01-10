@@ -1,6 +1,8 @@
-# JSWave
+# jsWave
 
-**JSWave** is a modern web-based music production tool inspired by legendary hardware such as the Roland TR-808, Akai MPC or E-mu SP-1200. Built with **[React](https://react.dev)**, **[Tone.js](https://github.com/Tonejs/Tone.js)**, JSWave offers a seamless interface for music producers to explore, compose, and create beats and melodies directly in their browser.
+![screenshot](screenshots/screenshot-1.png)
+
+**jsWave** is a modern web-based music production tool inspired by legendary hardware such as the Roland TR-808, Akai MPC or E-mu SP-1200. Built with **[React](https://react.dev)**, **[Tone.js](https://github.com/Tonejs/Tone.js)**, JSWave offers a seamless interface for music producers to explore, compose, and create beats and melodies directly in their browser.
 
 ## Features
 
@@ -27,8 +29,24 @@
 
 - Open the app in your browser.
 - Use the Transport Controls to play, pause, stop, or loop your sequence.
-- Add blocks to the timeline and edit sequences to craft your track.
+
+  ![transport controls](screenshots/transport.png)
+
+- Create sequencers and add blocks to the timeline.
+
+  ![timeline](screenshots/timeline.png)
+
+- Add tracks to each sequencer and start laying out notes to craft your track. TIP: Rigth click to select a specific note.
+
+  ![sequencer](screenshots/sequencer.png)
+
+- Tweak the parameters of the instruments to create your distinct sound.
+
+  ![parameters](screenshots/parameters.png)
+
 - Export your creation as an audio file using the record and download feature.
+
+  ![recording](screenshots/recording.png)
 
 ## Local installation
 
