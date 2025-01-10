@@ -56,6 +56,8 @@ Powered by:
 - [Tone.js](https://github.com/Tonejs/Tone.js)
 - [Tailwind CSS](https://tailwindcss.com/)
 
+Thanks to [Music Machines](http://machines.hyperreal.org/) for the classic drum machine samples.
+
 Special thanks to the open-source community for providing the tools to build this project.
 
 ## License

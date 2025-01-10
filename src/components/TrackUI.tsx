@@ -173,8 +173,6 @@ const TrackUI: React.FC<TrackUIProps> = ({
           {/* Context Menu for Subdivisions */}
           {contextMenu.open && contextMenu.data?.type === "subdivision" && (
             <ContextMenu
-              x={contextMenu.x}
-              y={contextMenu.y}
               menuRef={menuRef}
               items={SUBDIVISIONS.map((subdivision) => ({
                 label: subdivision,
@@ -209,8 +207,6 @@ const TrackUI: React.FC<TrackUIProps> = ({
           {/* Context Menu for Notes */}
           {contextMenu.open && contextMenu.data?.type === "note" && (
             <ContextMenu
-              x={contextMenu.x}
-              y={contextMenu.y}
               menuRef={menuRef}
               items={KEYS.map((note) => ({
                 label: note,
