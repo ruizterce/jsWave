@@ -29,8 +29,6 @@ export class Timeline {
   }
 
   addBlock(sequencerIndex: number, barIndex: number): void {
-    console.log("Adding block " + sequencerIndex + " " + barIndex);
-
     const sequencer = this._sequencers[sequencerIndex];
     sequencer.events[barIndex] = true;
 
@@ -65,7 +63,6 @@ export class Timeline {
 
       sequencer.events[barIndex] = true;
     }
-    console.log(sequencer.events);
   }
 
   removeBlock(sequencerIndex: number, barIndex: number): void {
@@ -87,7 +84,6 @@ export class Timeline {
       }
       sequencer.events[barIndex] = false;
     }
-    console.log(sequencer.events);
   }
 
   rescheduleSequencer(sequencerIndex: number): void {
@@ -113,7 +109,6 @@ export class Timeline {
 
   addSequencer(name: string): void {
     this._sequencers.push(new Sequencer(name, this._length, []));
-    console.log("Sequencer added.");
   }
 
   removeSequencer(sequencerIndex: number): void {

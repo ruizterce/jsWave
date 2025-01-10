@@ -31,13 +31,10 @@ export class Track {
   ) {
     this._name = name;
     this._sampleUrl = sampleUrl;
-    console.log("sampleUrl");
-    console.log(sampleUrl);
     this.instrument = this.createInstrument(instrumentType);
     this._notes = notes;
     this._noteDuration = "16n";
     this._sequence = this.createSequence(notes);
-    console.log(`Track "${name}" created`);
   }
 
   get name(): string {
@@ -125,7 +122,6 @@ export class Track {
         return new Tone.PolySynth().toDestination();
       case "sampler":
         if (this._sampleUrl) {
-          console.log(this._sampleUrl);
           return new Tone.Sampler({
             urls: {
               C5: this._sampleUrl,
