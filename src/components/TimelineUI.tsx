@@ -38,7 +38,7 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
   const activeBlock = position ? Number(position.toString().split(":")[0]) : 0;
 
   return (
-    <div className="relative flex flex-col gap-2 items-center h-full bg-light rounded-3xl p-8 pb-14 shadow-xl">
+    <div className="relative flex flex-col gap-2 items-center h-full min-h-[350px] bg-light rounded-3xl p-4 pb-14 md:p-8 md:pb-14 shadow-xl">
       {/* Transport Controls */}
       <TransportControls
         timeline={timeline}
@@ -98,7 +98,7 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
             ))}
           </div>
         </div>
-        <div className="max-h-[40px] md:max-h-[130px] lg:max-h-[190px] overflow-y-auto">
+        <div className="max-h-[100px] md:max-h-[130px] lg:max-h-[190px] overflow-y-auto">
           {/* Timeline Sequencers*/}
           {timeline.sequencers.map((sequencer, sequencerIndex) => {
             return (
@@ -154,14 +154,21 @@ const TimelineUI: React.FC<TimelineUIProps> = ({ timeline }) => {
                   <button
                     className="w-4 h-4 rounded-full text-xs bg-light text-dark hover:bg-teal-800 hover:invert hover:text-light active:bg-dark"
                     onClick={() => {
-                      const confirmed = window.confirm(
-                        "Are you sure you want to remove this sequencer?"
-                      );
-                      if (confirmed) {
-                        timeline.removeSequencer(sequencerIndex);
-                      }
+                      if (timeline.sequencers.length <= 1) {
+                        window.alert("You need to have at least 1 sequencer");
+                      } else {
+                        const confirmed = window.confirm(
+                          "Are you sure you want to remove this sequencer?"
+                        );
+                        if (confirmed) {
+                          setselectedSequencerIndex(
+                            sequencerIndex > 0 ? sequencerIndex - 1 : 0
+                          );
+                          timeline.removeSequencer(sequencerIndex);
+                        }
 
-                      forceUpdate({});
+                        forceUpdate({});
+                      }
                     }}
                   >
                     <img

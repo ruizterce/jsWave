@@ -139,7 +139,7 @@ const TrackUI: React.FC<TrackUIProps> = ({
             {/* Instrument Parameters */}
             <input
               type="range"
-              className="appearance-none rounded-full accent-secondary bg-light text-dark hover:bg-darkMedium hover:text-light active:bg-lightMedium"
+              className="w-36 appearance-none rounded-full accent-secondary bg-light text-dark hover:bg-darkMedium hover:text-light active:bg-lightMedium"
               min="-60"
               max="0"
               value={track.volume}

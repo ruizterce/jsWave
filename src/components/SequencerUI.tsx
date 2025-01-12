@@ -72,7 +72,7 @@ const SequencerUI: React.FC<SequencerUIProps> = ({
   const activeBlock = progress ? Math.floor(progress * notesLength) : null;
 
   return (
-    <div className="p-4 bg-lightMedium rounded-2xl flex flex-col gap-1 max-h-full overflow-auto">
+    <div className="p-4 bg-lightMedium rounded-2xl flex flex-col gap-1 min-h-[110px] overflow-auto">
       <div className="flex">
         <div className="w-[250px]">
           {" "}
